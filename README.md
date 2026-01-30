@@ -4,4 +4,4 @@ StudentTaskHub is a web-based task management application designed specifically 
 **front-end engineer**-Bhaveetha Patel Marri\
 **front-end engineer**-Divya Bhoomireddy\
 **back-end engineer**-Chinmai Mandala\
-**back-end engineer**-Nikita Aliminati\
+**back-end engineer**-Nikita Aliminati
