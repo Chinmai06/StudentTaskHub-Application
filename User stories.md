@@ -1,4 +1,3 @@
 # User stories
-As a student, I want the ability to edit or delete my tasks so that I can correct mistakes or update them when changes are needed. This helps me keep my task list accurate, organized, and up to date.
-
+As a student, I want to edit or delete my tasks so that I can fix mistakes or update them when needed.
 As a student, I want to claim responsibility.
