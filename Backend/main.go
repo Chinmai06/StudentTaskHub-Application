@@ -1,12 +1,12 @@
 package main
 
 import (
-	"student-task-hub/database"
-	"student-task-hub/routes"
+	"studenttaskhub/Database"
+	"studenttaskhub/routes"
 )
 
 func main() {
-	database.ConnectDB()
+	Database.ConnectDB()
 	r := routes.SetupRoutes()
 	r.Run(":8080")
 }
