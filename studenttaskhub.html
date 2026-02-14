@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentTaskHub - Create Task</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .create-task-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .create-task-card {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 750px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-header {
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        .card-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 1.1rem;
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .task-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        label {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 0.95rem;
+        }
+
+        .required {
+            color: #e53e3e;
+        }
+
+        /* Standard Inputs */
+        input[type="text"],
+        input[type="date"] {
+            padding: 0.875rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input.error {
+            border-color: #e53e3e;
+        }
+
+        /* Priority Radio Buttons */
+        .priority-options {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .priority-description {
+            color: #718096;
+            font-size: 0.875rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+
+        .priority-label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .priority-label input[type="radio"] {
+            display: none;
+        }
+
+        .priority-custom {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 2.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            color: #4a5568;
+            min-width: 150px;
+            justify-content: center;
+        }
+
+        .priority-custom svg {
+            transition: all 0.3s ease;
+        }
+
+        .priority-text {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        
+
+        .priority-label input[type="radio"]:checked + .priority-custom {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .priority-label input[type="radio"]:checked + .priority-custom .priority-text {
+            opacity: 1;
+        }
+
+        .priority-label input[type="radio"]:checked + .priority-custom svg circle {
+            fill: white;
+        }
+
+        /* Description Wrapper with Buttons */
+        .description-wrapper {
+            position: relative;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .description-wrapper:focus-within {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .description-wrapper textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            padding-bottom: 3.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            background: transparent;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .description-wrapper textarea:focus {
+            outline: none;
+        }
+
+        /* Description Action Buttons */
+        .description-actions {
+            position: absolute;
+            bottom: 0.75rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #718096;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: #f7fafc;
+            color: #667eea;
+        }
+
+        /* Select Wrapper */
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper select {
+            width: 100%;
+            padding: 0.875rem 2.5rem 0.875rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            background: white;
+            cursor: pointer;
+            appearance: none;
+        }
+
+        .select-wrapper select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .select-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #718096;
+        }
+
+        /* Attachments List */
+        .attachments-list {
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: #f7fafc;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        .attachment-item svg {
+            color: #667eea;
+            flex-shrink: 0;
+        }
+
+        .attachment-item span {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #e53e3e;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0 0.25rem;
+            line-height: 1;
+            transition: all 0.2s ease;
+        }
+
+        .remove-btn:hover {
+            color: #c53030;
+            transform: scale(1.2);
+        }
+
+        /* Error Message */
+        .error-message {
+            color: #e53e3e;
+            font-size: 0.875rem;
+            margin-top: -0.25rem;
+        }
+
+        /* Banners */
+        .error-banner {
+            background: #fff5f5;
+            border: 2px solid #feb2b2;
+            color: #c53030;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 500;
+            animation: slideDown 0.3s ease;
+        }
+
+        .success-banner {
+            background: #f0fff4;
+            border: 2px solid #9ae6b4;
+            color: #22543d;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Action Buttons */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #edf2f7;
+            color: #2d3748;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+
+        /* Spinner Animation */
+        .spinner {
+            animation: rotate 1s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .create-task-container {
+                padding: 1rem;
+            }
+
+            .create-task-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .card-header h1 {
+                font-size: 2rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .description-actions {
+                right: 0.5rem;
+                bottom: 0.5rem;
+                gap: 0.25rem;
+            }
+
+            .action-btn {
+                padding: 0.4rem;
+            }
+
+            .action-btn svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .priority-options {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="create-task-container">
+        <div class="create-task-card">
+            <div class="card-header">
+                <h1>Create New Task</h1>
+                <p class="subtitle">Stay organized, achieve your goals</p>
+            </div>
+
+            <form id="taskForm" class="task-form">
+                <!-- Task Title -->
+                <div class="form-group">
+                    <label for="title">
+                        Task Title <span class="required">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        placeholder="e.g., Complete Math Assignment"
+                    />
+                    <span class="error-message hidden" id="titleError"></span>
+                </div>
+
+                <!-- Description (First one - always visible) -->
+                <div class="form-group">
+                    <label for="description1">Description</label>
+                    <div class="description-wrapper">
+                        <textarea
+                            id="description1"
+                            name="description1"
+                            placeholder="Add any additional details about this task..."
+                            rows="4"
+                        ></textarea>
+                        <div class="description-actions">
+                            <input
+                                type="file"
+                                id="imageInput1"
+                                accept="image/*"
+                                multiple
+                                style="display: none;"
+                            />
+                            <label for="imageInput1" class="action-btn" title="Add image">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                            </label>
+
+                            <input
+                                type="file"
+                                id="fileInput1"
+                                multiple
+                                style="display: none;"
+                            />
+                            <label for="fileInput1" class="action-btn" title="Add file">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                    <polyline points="13 2 13 9 20 9"></polyline>
+                                </svg>
+                            </label>
+
+                            <input
+                                type="file"
+                                id="folderInput1"
+                                webkitdirectory
+                                directory
+                                multiple
+                                style="display: none;"
+                            />
+                            <label for="folderInput1" class="action-btn" title="Add folder">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Attachments List for first description -->
+                    <div class="attachments-list hidden" id="attachmentsList1"></div>
+                </div>
+
+                <!-- Due Date and Category Row -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dueDate">
+                            Due Date <span class="required">*</span>
+                        </label>
+                        <input
+                            type="date"
+                            id="dueDate"
+                            name="dueDate"
+                        />
+                        <span class="error-message hidden" id="dueDateError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <div class="select-wrapper">
+                            <select id="category" name="category">
+                                <option value="academic" selected>Academic</option>
+                                <option value="personal">Personal</option>
+                            </select>
+                            <svg class="select-icon" width="12" height="12" viewBox="0 0 12 12">
+                                <path fill="currentColor" d="M6 9L1 4h10z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Priority Radio Button (High only) -->
+                <div class="form-group">
+                    <label>Priority</label>
+                    <p class="priority-description">Please mark it as high priority if your task deadline is within 2 days</p>
+                    <div class="priority-options">
+                        <label class="priority-label">
+                            <input type="radio" name="priority" value="high" id="priorityHigh" />
+                            <span class="priority-custom">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                </svg>
+                                <span class="priority-text">High</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Priority Description (Second one - always visible) -->
+                <div class="form-group">
+                    <label for="description2">Priority Description</label>
+                    <div class="description-wrapper">
+                        <textarea
+                            id="description2"
+                            name="description2"
+                            placeholder="Add priority-specific details about this task..."
+                            rows="4"
+                        ></textarea>
+                        <div class="description-actions">
+                            <input
+                                type="file"
+                                id="imageInput2"
+                                accept="image/*"
+                                multiple
+                                style="display: none;"
+                            />
+                            <label for="imageInput2" class="action-btn" title="Add image">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                            </label>
+
+                            <input
+                                type="file"
+                                id="fileInput2"
+                                multiple
+                                style="display: none;"
+                            />
+                            <label for="fileInput2" class="action-btn" title="Add file">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                    <polyline points="13 2 13 9 20 9"></polyline>
+                                </svg>
+                            </label>
+
+                            <input
+                                type="file"
+                                id="folderInput2"
+                                webkitdirectory
+                                directory
+                                multiple
+                                style="display: none;"
+                            />
+                            <label for="folderInput2" class="action-btn" title="Add folder">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Attachments List for second description -->
+                    <div class="attachments-list hidden" id="attachmentsList2"></div>
+                </div>
+
+                <!-- Error Banner -->
+                <div class="error-banner hidden" id="errorBanner"></div>
+
+                <!-- Success Banner -->
+                <div class="success-banner hidden" id="successBanner">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Task created successfully!
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="form-actions">
+                    <button type="button" id="resetBtn" class="btn-secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="1 4 1 10 7 10"></polyline>
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                        </svg>
+                        Reset
+                    </button>
+                    <button type="submit" id="submitBtn" class="btn-primary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Create Task
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let attachments1 = [];
+        let attachments2 = [];
+        let isSubmitting = false;
+
+        // DOM elements
+        const form = document.getElementById('taskForm');
+        const titleInput = document.getElementById('title');
+        const description1Input = document.getElementById('description1');
+        const description2Input = document.getElementById('description2');
+        const dueDateInput = document.getElementById('dueDate');
+        const categoryInput = document.getElementById('category');
+        const priorityHighInput = document.getElementById('priorityHigh');
+        
+        // First description file inputs
+        const imageInput1 = document.getElementById('imageInput1');
+        const fileInput1 = document.getElementById('fileInput1');
+        const folderInput1 = document.getElementById('folderInput1');
+        const attachmentsList1 = document.getElementById('attachmentsList1');
+        
+        // Second description file inputs
+        const imageInput2 = document.getElementById('imageInput2');
+        const fileInput2 = document.getElementById('fileInput2');
+        const folderInput2 = document.getElementById('folderInput2');
+        const attachmentsList2 = document.getElementById('attachmentsList2');
+        
+        const resetBtn = document.getElementById('resetBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorBanner = document.getElementById('errorBanner');
+        const successBanner = document.getElementById('successBanner');
+        const titleError = document.getElementById('titleError');
+        const dueDateError = document.getElementById('dueDateError');
+
+        // File upload handlers for first description
+        function handleFileUpload1(e) {
+            const files = Array.from(e.target.files);
+            attachments1 = [...attachments1, ...files];
+            renderAttachments1();
+        }
+
+        imageInput1.addEventListener('change', handleFileUpload1);
+        fileInput1.addEventListener('change', handleFileUpload1);
+        folderInput1.addEventListener('change', handleFileUpload1);
+
+        // File upload handlers for second description
+        function handleFileUpload2(e) {
+            const files = Array.from(e.target.files);
+            attachments2 = [...attachments2, ...files];
+            renderAttachments2();
+        }
+
+        imageInput2.addEventListener('change', handleFileUpload2);
+        fileInput2.addEventListener('change', handleFileUpload2);
+        folderInput2.addEventListener('change', handleFileUpload2);
+
+        // Render attachments list for first description
+        function renderAttachments1() {
+            if (attachments1.length === 0) {
+                attachmentsList1.classList.add('hidden');
+                return;
+            }
+
+            attachmentsList1.classList.remove('hidden');
+            attachmentsList1.innerHTML = attachments1.map((file, index) => `
+                <div class="attachment-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                        <polyline points="13 2 13 9 20 9"></polyline>
+                    </svg>
+                    <span>${file.name}</span>
+                    <button type="button" onclick="removeAttachment1(${index})" class="remove-btn">×</button>
+                </div>
+            `).join('');
+        }
+
+        // Render attachments list for second description
+        function renderAttachments2() {
+            if (attachments2.length === 0) {
+                attachmentsList2.classList.add('hidden');
+                return;
+            }
+
+            attachmentsList2.classList.remove('hidden');
+            attachmentsList2.innerHTML = attachments2.map((file, index) => `
+                <div class="attachment-item">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                        <polyline points="13 2 13 9 20 9"></polyline>
+                    </svg>
+                    <span>${file.name}</span>
+                    <button type="button" onclick="removeAttachment2(${index})" class="remove-btn">×</button>
+                </div>
+            `).join('');
+        }
+
+        // Remove attachment from first description
+        function removeAttachment1(index) {
+            attachments1 = attachments1.filter((_, i) => i !== index);
+            renderAttachments1();
+        }
+
+        // Remove attachment from second description
+        function removeAttachment2(index) {
+            attachments2 = attachments2.filter((_, i) => i !== index);
+            renderAttachments2();
+        }
+
+        // Clear errors on input
+        titleInput.addEventListener('input', () => {
+            titleInput.classList.remove('error');
+            titleError.classList.add('hidden');
+        });
+
+        dueDateInput.addEventListener('input', () => {
+            dueDateInput.classList.remove('error');
+            dueDateError.classList.add('hidden');
+        });
+
+        // Validation
+        function validateForm() {
+            let isValid = true;
+            errorBanner.classList.add('hidden');
+
+            // Validate title
+            if (!titleInput.value.trim()) {
+                titleInput.classList.add('error');
+                titleError.textContent = 'Task title is required';
+                titleError.classList.remove('hidden');
+                isValid = false;
+            }
+
+            // Validate due date
+            if (!dueDateInput.value) {
+                dueDateInput.classList.add('error');
+                dueDateError.textContent = 'Due date is required';
+                dueDateError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                const selectedDate = new Date(dueDateInput.value);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                if (selectedDate < today) {
+                    dueDateInput.classList.add('error');
+                    dueDateError.textContent = 'Due date cannot be in the past';
+                    dueDateError.classList.remove('hidden');
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        // Form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!validateForm() || isSubmitting) {
+                return;
+            }
+
+            isSubmitting = true;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <svg class="spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="2" x2="12" y2="6"></line>
+                    <line x1="12" y1="18" x2="12" y2="22"></line>
+                    <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                    <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                    <line x1="2" y1="12" x2="6" y2="12"></line>
+                    <line x1="18" y1="12" x2="22" y2="12"></line>
+                    <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                    <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                </svg>
+                Creating...
+            `;
+
+            // Prepare form data
+            const formData = {
+                title: titleInput.value,
+                description: description1Input.value,
+                priorityDescription: description2Input.value,
+                dueDate: dueDateInput.value,
+                priority: priorityHighInput.checked ? 'high' : '',
+                category: categoryInput.value,
+                attachments1: attachments1.map(f => f.name),
+                attachments2: attachments2.map(f => f.name),
+                createdAt: new Date().toISOString()
+            };
+
+            // Simulate API call
+            try {
+                // Replace this with your actual API endpoint
+                console.log('Task Data:', formData);
+                console.log('Description 1 Attachments:', attachments1);
+                console.log('Priority Description Attachments:', attachments2);
+                
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // Show success message
+                successBanner.classList.remove('hidden');
+
+                // Reset form after 2 seconds
+                setTimeout(() => {
+                    resetForm();
+                    successBanner.classList.add('hidden');
+                }, 2000);
+
+            } catch (error) {
+                console.error('Error:', error);
+                errorBanner.textContent = 'Failed to create task. Please try again.';
+                errorBanner.classList.remove('hidden');
+            } finally {
+                isSubmitting = false;
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Create Task
+                `;
+            }
+        });
+
+        // Reset form
+        resetBtn.addEventListener('click', resetForm);
+
+        function resetForm() {
+            form.reset();
+            attachments1 = [];
+            attachments2 = [];
+            renderAttachments1();
+            renderAttachments2();
+            titleInput.classList.remove('error');
+            dueDateInput.classList.remove('error');
+            titleError.classList.add('hidden');
+            dueDateError.classList.add('hidden');
+            errorBanner.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
