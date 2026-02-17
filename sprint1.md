@@ -14,6 +14,8 @@ Issue # | Title | Description | Status |
 | 4 | Update Task API | PUT /api/tasks/{id} with creator-only authorization | Completed |
 | 5 | Delete Task API | DELETE /api/tasks/{id} with creator-only authorization | Completed |
 | 6 | Claim Task API | POST /api/tasks/{id}/claim endpoint | Completed |
+
+
 In Backend Prespective all the 6 issues are completed 
 
 
