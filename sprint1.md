@@ -1,5 +1,8 @@
 # Sprint1
 ## User stories:
+
+These are the user stories for sprint1 
+
 1.As a student, I want to create a task with a deadline and priority so that others understand its urgency.
 
 2.As a student, I want to edit my tasks so that I can fix mistakes or update them when needed.
