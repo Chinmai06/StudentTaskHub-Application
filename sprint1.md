@@ -14,7 +14,7 @@ These are the user stories for sprint1
 5.As a student, I want to see the status of a task so that I can track its progress.
 
 
-## Created Issues with status
+## Issues with status
 Issue # | Title | Description | Status |
 |---------|-------|-------------|--------|
 | 1 | Backend Project setup | initialise Go project with SQLite, set up project structure| Completed |
