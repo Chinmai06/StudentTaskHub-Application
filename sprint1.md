@@ -33,5 +33,7 @@ In Backend Prespective all the 6 issues are completed
 
 In Frontend Prespective all the 5 issues are completed 
 
+The frontend and backend videos are in the drive, and the link is provided below.
+
 https://drive.google.com/drive/folders/1NvjDtgFDQ_soFroiBVeYQY_utJEN38Cn?usp=share_link
 
