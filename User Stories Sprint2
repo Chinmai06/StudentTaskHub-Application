@@ -1,1 +1,3 @@
-For User Login- For an existing user, I want them sign in using their email and password so that they can securely access StudentTaskHub dashboard and manage their tasks.
+As a student, I want to log in with my email and password so that I can access my task manager and view my tasks.
+As a student, I want to create a new account if I am a new user so that I can register and start using the application.
+As a student, I want to use an eye icon to show or hide my password while entering it so that I can type it correctly without mistakes.
