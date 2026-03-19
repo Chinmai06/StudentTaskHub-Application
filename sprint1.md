@@ -32,4 +32,5 @@ Issue # | Title | Description | Status |
 
 In Backend Prespective all the 6 issues are completed
 
-In Frontend Prespective all the 5 issues are completed
+In Frontend Prespective all the 5 issues are completed 
+
