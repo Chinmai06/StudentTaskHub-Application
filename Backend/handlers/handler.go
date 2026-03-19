@@ -4,11 +4,13 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 	"studenttaskhub/database"
 	"studenttaskhub/models"
 	"time"
 
 	"github.com/gorilla/mux"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // ============================================================
@@ -42,7 +44,93 @@ func getTaskByID(id int) (*models.Task, error) {
 }
 
 // ============================================================
-// Task handlers
+// User handlers (Sprint 2 - NEW)
+// ============================================================
+
+// Register creates a new user account
+// POST /api/register
+func Register(w http.ResponseWriter, r *http.Request) {
+	var req models.RegisterRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		sendError(w, http.StatusBadRequest, "Invalid request body")
+		return
+	}
+
+	// Validate required fields
+	if req.Username == "" || req.Email == "" || req.Password == "" {
+		sendError(w, http.StatusBadRequest, "Username, email, and password are required")
+		return
+	}
+
+	// Validate password length
+	if len(req.Password) < 6 {
+		sendError(w, http.StatusBadRequest, "Password must be at least 6 characters")
+		return
+	}
+
+	// Hash the password using bcrypt
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, "Failed to hash password")
+		return
+	}
+
+	// Insert user into database
+	_, err = database.DB.Exec(
+		"INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
+		req.Username, req.Email, string(hashedPassword),
+	)
+	if err != nil {
+		sendError(w, http.StatusConflict, "Username or email already exists")
+		return
+	}
+
+	sendJSON(w, http.StatusCreated, map[string]string{
+		"message":  "User registered successfully",
+		"username": req.Username,
+	})
+}
+
+// Login authenticates a user
+// POST /api/login
+func Login(w http.ResponseWriter, r *http.Request) {
+	var req models.LoginRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		sendError(w, http.StatusBadRequest, "Invalid request body")
+		return
+	}
+
+	if req.Username == "" || req.Password == "" {
+		sendError(w, http.StatusBadRequest, "Username and password are required")
+		return
+	}
+
+	// Get stored password hash from database
+	var storedPassword string
+	err := database.DB.QueryRow(
+		"SELECT password FROM users WHERE username = ?", req.Username,
+	).Scan(&storedPassword)
+
+	if err != nil {
+		sendError(w, http.StatusUnauthorized, "Invalid username or password")
+		return
+	}
+
+	// Compare password with stored hash
+	err = bcrypt.CompareHashAndPassword([]byte(storedPassword), []byte(req.Password))
+	if err != nil {
+		sendError(w, http.StatusUnauthorized, "Invalid username or password")
+		return
+	}
+
+	sendJSON(w, http.StatusOK, models.LoginResponse{
+		Message:  "Login successful",
+		Username: req.Username,
+	})
+}
+
+// ============================================================
+// Task handlers (Sprint 1 + Sprint 2 search/filter)
 // ============================================================
 
 // CreateTask creates a new task
@@ -68,6 +156,14 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 	// Validate deadline format
 	if _, err := time.Parse("2006-01-02", req.Deadline); err != nil {
 		sendError(w, http.StatusBadRequest, "Deadline must be in YYYY-MM-DD format")
+		return
+	}
+
+	// Sprint 2: Verify the creator is a registered user
+	var exists int
+	err := database.DB.QueryRow("SELECT COUNT(*) FROM users WHERE username = ?", req.CreatedBy).Scan(&exists)
+	if err != nil || exists == 0 {
+		sendError(w, http.StatusBadRequest, "User does not exist. Please register first.")
 		return
 	}
 
@@ -100,8 +196,8 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 	sendJSON(w, http.StatusCreated, task)
 }
 
-// GetTasks returns all tasks, with optional filters
-// GET /api/tasks?status=open&sort=deadline
+// GetTasks returns all tasks, with optional filters and search
+// GET /api/tasks?status=open&sort=deadline&search=ML&priority=high
 func GetTasks(w http.ResponseWriter, r *http.Request) {
 	query := "SELECT id, title, description, deadline, priority, status, created_by, claimed_by, created_at, updated_at FROM tasks WHERE 1=1"
 	var args []interface{}
@@ -127,6 +223,33 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 		args = append(args, claimedBy)
 	}
 
+	// Sprint 2: Filter by priority if provided
+	priority := r.URL.Query().Get("priority")
+	if priority != "" {
+		query += " AND priority = ?"
+		args = append(args, priority)
+	}
+
+	// Sprint 2: Search by title or description (case-insensitive)
+	search := r.URL.Query().Get("search")
+	if search != "" {
+		searchTerm := "%" + strings.ToLower(search) + "%"
+		query += " AND (LOWER(title) LIKE ? OR LOWER(description) LIKE ?)"
+		args = append(args, searchTerm, searchTerm)
+	}
+
+	// Sprint 2: Filter by deadline range
+	deadlineBefore := r.URL.Query().Get("deadline_before")
+	if deadlineBefore != "" {
+		query += " AND deadline <= ?"
+		args = append(args, deadlineBefore)
+	}
+	deadlineAfter := r.URL.Query().Get("deadline_after")
+	if deadlineAfter != "" {
+		query += " AND deadline >= ?"
+		args = append(args, deadlineAfter)
+	}
+
 	// Sort by deadline or priority
 	sort := r.URL.Query().Get("sort")
 	switch sort {
@@ -134,6 +257,10 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 		query += " ORDER BY deadline ASC"
 	case "priority":
 		query += " ORDER BY CASE priority WHEN 'high' THEN 1 WHEN 'normal' THEN 2 END ASC"
+	case "newest":
+		query += " ORDER BY created_at DESC"
+	case "oldest":
+		query += " ORDER BY created_at ASC"
 	default:
 		query += " ORDER BY created_at DESC"
 	}
@@ -317,6 +444,14 @@ func ClaimTask(w http.ResponseWriter, r *http.Request) {
 
 	if req.ClaimedBy == "" {
 		sendError(w, http.StatusBadRequest, "claimed_by is required")
+		return
+	}
+
+	// Sprint 2: Verify the claimer is a registered user
+	var exists int
+	err = database.DB.QueryRow("SELECT COUNT(*) FROM users WHERE username = ?", req.ClaimedBy).Scan(&exists)
+	if err != nil || exists == 0 {
+		sendError(w, http.StatusBadRequest, "User does not exist. Please register first.")
 		return
 	}
 

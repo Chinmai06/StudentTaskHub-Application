@@ -1,7 +1,8 @@
 # Sprint1
-## User stories:
 
-These are the user stories for sprint1 
+## User stories
+
+These are the user stories for sprint1
 
 1.As a student, I want to create a task with a deadline and priority so that others understand its urgency.
 
@@ -13,8 +14,8 @@ These are the user stories for sprint1
 
 5.As a student, I want to see the status of a task so that I can track its progress.
 
-
 ## Issues with status
+
 Issue # | Title | Description | Status |
 |---------|-------|-------------|--------|
 | 1 | Backend Project setup | initialise Go project with SQLite, set up project structure| Completed |
@@ -29,7 +30,6 @@ Issue # | Title | Description | Status |
 | 10 | Responsive Layout for Create Task Page | Updated CreateTask.css using flex/grid and breakpoints to ensure proper display on mobile, tablet, and desktop screens | Completed |
 | 11 | Button Alignment Fix | Adjusted CSS to properly align “Create Task” and “Reset/Cancel” buttons with equal spacing and height across screen sizes | Completed |
 
-In Backend Prespective all the 6 issues are completed 
+In Backend Prespective all the 6 issues are completed
 
-In Frontend Prespective all the 5 issues are completed 
-
+In Frontend Prespective all the 5 issues are completed

@@ -27,6 +27,16 @@ func InitDB(filepath string) {
 }
 
 func createTables() {
+	// Sprint 2: Added users table for registration and login
+	usersTable := `
+	CREATE TABLE IF NOT EXISTS users (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		username TEXT UNIQUE NOT NULL,
+		email TEXT UNIQUE NOT NULL,
+		password TEXT NOT NULL,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+	);`
+
 	tasksTable := `
 	CREATE TABLE IF NOT EXISTS tasks (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,10 +48,17 @@ func createTables() {
 		created_by TEXT NOT NULL,
 		claimed_by TEXT DEFAULT '',
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY (created_by) REFERENCES users(username),
+		FOREIGN KEY (claimed_by) REFERENCES users(username)
 	);`
 
-	_, err := DB.Exec(tasksTable)
+	_, err := DB.Exec(usersTable)
+	if err != nil {
+		log.Fatal("Failed to create users table:", err)
+	}
+
+	_, err = DB.Exec(tasksTable)
 	if err != nil {
 		log.Fatal("Failed to create tasks table:", err)
 	}

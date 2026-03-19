@@ -20,6 +20,10 @@ func main() {
 	// API routes
 	api := r.PathPrefix("/api").Subrouter()
 
+	// User routes (Sprint 2 - NEW)
+	api.HandleFunc("/register", handlers.Register).Methods("POST", "OPTIONS")
+	api.HandleFunc("/login", handlers.Login).Methods("POST", "OPTIONS")
+
 	// Task routes
 	api.HandleFunc("/tasks", handlers.CreateTask).Methods("POST", "OPTIONS")
 	api.HandleFunc("/tasks", handlers.GetTasks).Methods("GET")
@@ -36,8 +40,10 @@ func main() {
 	port := ":8080"
 	log.Printf("StudentTaskHub API server starting on http://localhost%s", port)
 	log.Println("Available endpoints:")
+	log.Println("  POST   /api/register")
+	log.Println("  POST   /api/login")
 	log.Println("  POST   /api/tasks")
-	log.Println("  GET    /api/tasks              (query: ?status=open&sort=deadline)")
+	log.Println("  GET    /api/tasks              (query: ?status=open&sort=deadline&search=keyword)")
 	log.Println("  GET    /api/tasks/{id}")
 	log.Println("  PUT    /api/tasks/{id}?username=xxx")
 	log.Println("  DELETE /api/tasks/{id}?username=xxx")
