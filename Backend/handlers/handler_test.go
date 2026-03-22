@@ -369,6 +369,96 @@ func TestGetTasks_Search(t *testing.T) {
 		t.Errorf("Expected 'ML Assignment', got '%s'", tasks[0].Title)
 	}
 }
+func TestGetTasks_FilterByClaimedUser(t *testing.T) {
+	setupTestDB(t)
+
+	// Create users
+	createTestUser(t, "creator", "creator@ufl.edu", "pass123")
+	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
+
+	// Create tasks
+	createTestTask(t, "Task 1", "Desc", "2026-03-01", "high", "creator")
+	createTestTask(t, "Task 2", "Desc", "2026-04-01", "", "creator")
+
+	// Claim only first task by alice
+	claimBody := `{"claimed_by":"alice"}`
+	reqClaim := httptest.NewRequest("POST", "/api/tasks/1/claim", bytes.NewBufferString(claimBody))
+	reqClaim.Header.Set("Content-Type", "application/json")
+	reqClaim = mux.SetURLVars(reqClaim, map[string]string{"id": "1"})
+	rrClaim := httptest.NewRecorder()
+	ClaimTask(rrClaim, reqClaim)
+
+	// Fetch tasks claimed by alice
+	req := httptest.NewRequest("GET", "/api/tasks?claimed_by=alice", nil)
+	rr := httptest.NewRecorder()
+
+	GetTasks(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", rr.Code)
+	}
+
+	var tasks []models.Task
+	json.NewDecoder(rr.Body).Decode(&tasks)
+
+	// Should return only 1 task
+	if len(tasks) != 1 {
+		t.Errorf("Expected 1 claimed task, got %d", len(tasks))
+	}
+
+	if len(tasks) > 0 {
+		if tasks[0].ClaimedBy != "alice" {
+			t.Errorf("Expected claimed_by 'alice', got '%s'", tasks[0].ClaimedBy)
+		}
+		if tasks[0].Status != "claimed" {
+			t.Errorf("Expected status 'claimed', got '%s'", tasks[0].Status)
+		}
+	}
+}
+
+func TestSearchTasks_ByKeyword(t *testing.T) {
+	setupTestDB(t)
+
+	// Create user
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+
+	// Create tasks
+	createTestTask(t, "Machine Learning Project", "Neural networks", "2026-03-01", "high", "chinmai")
+	createTestTask(t, "Database Assignment", "SQL queries", "2026-04-01", "", "chinmai")
+	createTestTask(t, "AI Homework", "ML basics", "2026-05-01", "", "chinmai")
+
+	// Search for "ML"
+	req := httptest.NewRequest("GET", "/api/tasks?search=ML", nil)
+	rr := httptest.NewRecorder()
+
+	GetTasks(rr, req)
+
+	// Check response
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", rr.Code)
+	}
+
+	var tasks []models.Task
+	json.NewDecoder(rr.Body).Decode(&tasks)
+
+	// Should match 2 tasks:
+	// "Machine Learning Project" and "AI Homework"
+	if len(tasks) != 1 {
+		t.Errorf("Expected 1 tasks matching 'ML', got %d", len(tasks))
+	}
+
+	// Optional: verify content
+	found := false
+	for _, task := range tasks {
+		if task.Title == "Machine Learning Project" || task.Title == "AI Homework" {
+			found = true
+		}
+	}
+
+	if !found {
+		t.Errorf("Expected matching tasks not found in results")
+	}
+}
 
 func TestGetTasks_SearchCaseInsensitive(t *testing.T) {
 	setupTestDB(t)
@@ -707,5 +797,45 @@ func TestUpdateTaskStatus_Forbidden(t *testing.T) {
 
 	if rr.Code != http.StatusForbidden {
 		t.Errorf("Expected status 403, got %d", rr.Code)
+	}
+}
+func TestMarkTaskAsCompleted(t *testing.T) {
+	setupTestDB(t)
+
+	// Create users
+	createTestUser(t, "creator", "creator@ufl.edu", "pass123")
+	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
+
+	// Create a task
+	createTestTask(t, "Complete Me", "Desc", "2026-03-01", "high", "creator")
+
+	// Step 1: Claim task by alice
+	claimBody := `{"claimed_by":"alice"}`
+	reqClaim := httptest.NewRequest("POST", "/api/tasks/1/claim", bytes.NewBufferString(claimBody))
+	reqClaim.Header.Set("Content-Type", "application/json")
+	reqClaim = mux.SetURLVars(reqClaim, map[string]string{"id": "1"})
+	rrClaim := httptest.NewRecorder()
+	ClaimTask(rrClaim, reqClaim)
+
+	// Step 2: Mark task as done
+	updateBody := `{"status":"done"}`
+	req := httptest.NewRequest("PATCH", "/api/tasks/1/status?username=alice", bytes.NewBufferString(updateBody))
+	req.Header.Set("Content-Type", "application/json")
+	req = mux.SetURLVars(req, map[string]string{"id": "1"})
+	rr := httptest.NewRecorder()
+
+	UpdateTaskStatus(rr, req)
+
+	// Check response
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", rr.Code)
+	}
+
+	var task models.Task
+	json.NewDecoder(rr.Body).Decode(&task)
+
+	// Validate status updated
+	if task.Status != "done" {
+		t.Errorf("Expected status 'done', got '%s'", task.Status)
 	}
 }
