@@ -307,6 +307,38 @@ func TestCreateTask_UnregisteredUser(t *testing.T) {
 // ============================================================
 // GetTasks Tests
 // ============================================================
+func TestGetTasks_FilterByCreatedUser(t *testing.T) {
+	setupTestDB(t)
+
+	createTestUser(t, "nikita", "aliminati.reddy@ufl.edu", "123456")
+	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
+
+	createTestTask(t, "Task 1", "Desc", "2026-03-01", "high", "nikita")
+	createTestTask(t, "Task 2", "Desc", "2026-04-01", "", "nikita")
+	createTestTask(t, "Task 3", "Desc", "2026-05-01", "", "alice")
+
+	req := httptest.NewRequest("GET", "/api/tasks?created_by=nikita", nil)
+	rr := httptest.NewRecorder()
+
+	GetTasks(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", rr.Code)
+	}
+
+	var tasks []models.Task
+	json.NewDecoder(rr.Body).Decode(&tasks)
+
+	if len(tasks) != 2 {
+		t.Errorf("Expected 2 tasks created by nikita, got %d", len(tasks))
+	}
+
+	for _, task := range tasks {
+		if task.CreatedBy != "nikita" {
+			t.Errorf("Expected created_by 'nikita', got '%s'", task.CreatedBy)
+		}
+	}
+}
 
 func TestGetTasks_Empty(t *testing.T) {
 	setupTestDB(t)
@@ -372,15 +404,12 @@ func TestGetTasks_Search(t *testing.T) {
 func TestGetTasks_FilterByClaimedUser(t *testing.T) {
 	setupTestDB(t)
 
-	// Create users
-	createTestUser(t, "creator", "creator@ufl.edu", "pass123")
+	createTestUser(t, "nikita", "aliminati.reddy@ufl.edu", "123456")
 	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
 
-	// Create tasks
-	createTestTask(t, "Task 1", "Desc", "2026-03-01", "high", "creator")
-	createTestTask(t, "Task 2", "Desc", "2026-04-01", "", "creator")
+	createTestTask(t, "Task 1", "Desc", "2026-03-01", "high", "nikita")
+	createTestTask(t, "Task 2", "Desc", "2026-04-01", "", "nikita")
 
-	// Claim only first task by alice
 	claimBody := `{"claimed_by":"alice"}`
 	reqClaim := httptest.NewRequest("POST", "/api/tasks/1/claim", bytes.NewBufferString(claimBody))
 	reqClaim.Header.Set("Content-Type", "application/json")
@@ -388,7 +417,6 @@ func TestGetTasks_FilterByClaimedUser(t *testing.T) {
 	rrClaim := httptest.NewRecorder()
 	ClaimTask(rrClaim, reqClaim)
 
-	// Fetch tasks claimed by alice
 	req := httptest.NewRequest("GET", "/api/tasks?claimed_by=alice", nil)
 	rr := httptest.NewRecorder()
 
@@ -401,7 +429,6 @@ func TestGetTasks_FilterByClaimedUser(t *testing.T) {
 	var tasks []models.Task
 	json.NewDecoder(rr.Body).Decode(&tasks)
 
-	// Should return only 1 task
 	if len(tasks) != 1 {
 		t.Errorf("Expected 1 claimed task, got %d", len(tasks))
 	}
@@ -419,21 +446,17 @@ func TestGetTasks_FilterByClaimedUser(t *testing.T) {
 func TestSearchTasks_ByKeyword(t *testing.T) {
 	setupTestDB(t)
 
-	// Create user
-	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+	createTestUser(t, "nikita", "aliminati.reddy@ufl.edu", "123456")
 
-	// Create tasks
-	createTestTask(t, "Machine Learning Project", "Neural networks", "2026-03-01", "high", "chinmai")
-	createTestTask(t, "Database Assignment", "SQL queries", "2026-04-01", "", "chinmai")
-	createTestTask(t, "AI Homework", "ML basics", "2026-05-01", "", "chinmai")
+	createTestTask(t, "Machine Learning Project", "Neural networks", "2026-03-01", "high", "nikita")
+	createTestTask(t, "Database Assignment", "SQL queries", "2026-04-01", "", "nikita")
+	createTestTask(t, "AI Homework", "ML basics", "2026-05-01", "", "nikita")
 
-	// Search for "ML"
 	req := httptest.NewRequest("GET", "/api/tasks?search=ML", nil)
 	rr := httptest.NewRecorder()
 
 	GetTasks(rr, req)
 
-	// Check response
 	if rr.Code != http.StatusOK {
 		t.Errorf("Expected status 200, got %d", rr.Code)
 	}
@@ -441,25 +464,21 @@ func TestSearchTasks_ByKeyword(t *testing.T) {
 	var tasks []models.Task
 	json.NewDecoder(rr.Body).Decode(&tasks)
 
-	// Should match 2 tasks:
-	// "Machine Learning Project" and "AI Homework"
 	if len(tasks) != 1 {
-		t.Errorf("Expected 1 tasks matching 'ML', got %d", len(tasks))
+		t.Errorf("Expected 1 task matching 'ML', got %d", len(tasks))
 	}
 
-	// Optional: verify content
 	found := false
 	for _, task := range tasks {
-		if task.Title == "Machine Learning Project" || task.Title == "AI Homework" {
+		if task.Title == "AI Homework" {
 			found = true
 		}
 	}
 
 	if !found {
-		t.Errorf("Expected matching tasks not found in results")
+		t.Errorf("Expected matching task not found in results")
 	}
 }
-
 func TestGetTasks_SearchCaseInsensitive(t *testing.T) {
 	setupTestDB(t)
 	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
@@ -802,14 +821,11 @@ func TestUpdateTaskStatus_Forbidden(t *testing.T) {
 func TestMarkTaskAsCompleted(t *testing.T) {
 	setupTestDB(t)
 
-	// Create users
-	createTestUser(t, "creator", "creator@ufl.edu", "pass123")
+	createTestUser(t, "nikita", "aliminati.reddy@ufl.edu", "123456")
 	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
 
-	// Create a task
-	createTestTask(t, "Complete Me", "Desc", "2026-03-01", "high", "creator")
+	createTestTask(t, "Complete Me", "Desc", "2026-03-01", "high", "nikita")
 
-	// Step 1: Claim task by alice
 	claimBody := `{"claimed_by":"alice"}`
 	reqClaim := httptest.NewRequest("POST", "/api/tasks/1/claim", bytes.NewBufferString(claimBody))
 	reqClaim.Header.Set("Content-Type", "application/json")
@@ -817,7 +833,6 @@ func TestMarkTaskAsCompleted(t *testing.T) {
 	rrClaim := httptest.NewRecorder()
 	ClaimTask(rrClaim, reqClaim)
 
-	// Step 2: Mark task as done
 	updateBody := `{"status":"done"}`
 	req := httptest.NewRequest("PATCH", "/api/tasks/1/status?username=alice", bytes.NewBufferString(updateBody))
 	req.Header.Set("Content-Type", "application/json")
@@ -826,7 +841,6 @@ func TestMarkTaskAsCompleted(t *testing.T) {
 
 	UpdateTaskStatus(rr, req)
 
-	// Check response
 	if rr.Code != http.StatusOK {
 		t.Errorf("Expected status 200, got %d", rr.Code)
 	}
@@ -834,7 +848,6 @@ func TestMarkTaskAsCompleted(t *testing.T) {
 	var task models.Task
 	json.NewDecoder(rr.Body).Decode(&task)
 
-	// Validate status updated
 	if task.Status != "done" {
 		t.Errorf("Expected status 'done', got '%s'", task.Status)
 	}
