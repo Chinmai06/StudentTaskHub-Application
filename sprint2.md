@@ -355,24 +355,3 @@ Update the status of a task. Only the task creator or claimer can update status.
 | 400 | Invalid status value |
 | 403 | User is not the creator or claimer |
 | 404 | Task not found |
-=======
-| Issue # | Title                                                     | Description                                                                                                                                                                           | Status    |
-| ------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| 27      | Unit Testing                                              | perform Unit Testing to all the issues created                                                                                                                                        | Completed |
-| 26      | Logout button not visible / improperly placed             | The logout button is not present at the top-right corner of the page as expected, causing usability issues for users trying.                                                          | Completed |
-| 25      | Back button missing on Tasks page                         | The Tasks page does not provide a back navigation option, making it difficult for users to return to the previous screen or dashboard.                                                | Completed |
-| 24      | Profile details update functionality not working properly | Users are unable to update their profile information successfully. Changes made in the profile section are either not saved or not reflected after submission.                        | Completed |
-| 23      | Password Visibility Toggle                                | use an eye icon to show or hide my password while typing so that they can enter it correctly without mistakes during sign in or account creation. | Completed |
-| 22      | Account Creation                                          |create an account so that they can register themself and start using StudentTaskHub for managing their tasks.                                            | Completed |
-| 21      | Sign In Functionality                                     |sign in using their email and password so that they can securely access StudentTaskHub account and manage their tasks.                                  | Completed |
-| 20      | Mark task as completed                                    | Update the status of a claimed task to completed in the database.                                                                                                                     | Completed |
-| 19      | Fetch tasks claimed by user                               | Retrieve all tasks that have been claimed by the authenticated user.                                                                                                                  | Completed |
-| 18      | Fetch tasks created by user                               | Retrieve all tasks from the database that were created by the authenticated user.                                                                                                     | Completed |
-| 17      | Implement API to fetch tasks created by a user            | creating API endpoints for fetch task                                                                                                                                                 | Completed |
-| 15      | Create users table in database                            | Add table in Database                                                                                                                                                                 | Completed |
-| 14      | Implement basic user authentication                       | Create a simple login system to identify users in the system.                                                                                                                         | Completed |
-
-In Backend Prespective all the 8 issues are completed
-
-In Frontend Prespective all the 6 issues are completed
->>>>>>> 1388d5763680a261a35db6a27b18923f262b58b0
