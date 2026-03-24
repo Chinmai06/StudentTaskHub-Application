@@ -32,6 +32,10 @@ These are the user stories for sprint2
 | 15      | Create users table in database                            | Design and implement users table schema                                               | Completed |
 | 14      | Implement basic user authentication                       | Add login/register with password validation                                           | Completed |
 
+In Backend Prespective all the 8 issues are completed
+
+In Frontend Prespective all the 6 issues are completed
+
 
 ## Backend API Documentation
 
