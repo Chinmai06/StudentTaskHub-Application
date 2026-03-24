@@ -517,6 +517,9 @@
       .hub-copy h3 { font-size: 1.8rem; }
       .task-simple-title h2 { font-size: 2rem; }
       .task-simple-card { padding: 22px 18px; }
+      .simple-page-shell { width: min(100vw - 28px, 100%); }
+      .simple-page-card { padding: 22px 18px; }
+      .simple-page-top { align-items: flex-start; flex-direction: column; }
       .task-action-bar { align-items: stretch; }
       .task-submit-actions, .task-action-bar > .secondary-btn {
         width: 100%;
@@ -532,6 +535,216 @@
         width: 100%;
         text-align: center;
       }
+    }
+
+
+    .site-nav-bar {
+      width: 100%;
+      background: #4c2f91;
+      border-radius: 24px;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      box-shadow: 0 16px 34px rgba(76, 47, 145, 0.22);
+    }
+    .site-nav-link {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: rgba(255,255,255,0.92);
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 14px 20px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+    .site-nav-link:hover,
+    .site-nav-link.active {
+      background: rgba(255,255,255,0.16);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+    @media (max-width: 720px) {
+      .site-nav-bar { justify-content: stretch; gap: 10px; }
+      .site-nav-link { flex: 1 1 calc(50% - 10px); text-align: center; }
+    }
+
+  
+
+    /* Updated layout styling */
+    .app-screen { min-height: 100vh; }
+    .full-page-shell {
+      width: min(1380px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 28px 0 40px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .top-compact-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+    .hub-chip.compact {
+      padding: 12px 18px;
+      border-radius: 28px;
+      gap: 14px;
+    }
+    .hub-chip.compact .mini-logo {
+      width: 56px;
+      height: 56px;
+      font-size: 2rem;
+      border-radius: 16px;
+    }
+    .hub-chip.compact .hub-copy h3 {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 1;
+    }
+    .hub-chip.compact .hub-copy p {
+      margin: 6px 0 0;
+      font-size: 0.92rem;
+    }
+    .task-user-actions.compact-actions {
+      gap: 12px;
+      flex-wrap: nowrap;
+    }
+    .task-user-actions.compact-actions .signed-pill {
+      padding: 14px 22px;
+      font-size: 0.95rem;
+      border-radius: 24px;
+      white-space: nowrap;
+    }
+    .task-user-actions.compact-actions .task-top-btn {
+      min-width: 138px;
+      padding: 14px 22px;
+      border-radius: 20px;
+    }
+    .page-nav-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .page-nav-wrap .site-nav-bar {
+      width: min(1240px, 100%);
+      border-radius: 0 0 34px 34px;
+      padding: 12px 20px;
+    }
+    .content-surface {
+      background: rgba(255,255,255,0.84);
+      border: 1px solid rgba(224, 229, 242, 0.94);
+      border-radius: 32px;
+      padding: 28px;
+      box-shadow: 0 18px 36px rgba(171, 180, 208, 0.12);
+      backdrop-filter: blur(8px);
+      flex: 1;
+    }
+    .home-header, .task-header, .view-header, .profile-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .home-header h2, .task-header h2, .view-header h2, .profile-header h2 {
+      margin: 0 0 6px;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.05;
+    }
+    .home-header p, .task-header p, .view-header p, .profile-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+    .task-count-badge {
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(76,47,145,0.1);
+      color: #4c2f91;
+      font-weight: 700;
+    }
+    .bottom-corners {
+      margin-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .bottom-center {
+      margin-top: 28px;
+      display: flex;
+      justify-content: center;
+    }
+    .my-tasks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .task-card {
+      background: rgba(255,255,255,0.94);
+      border: 1px solid rgba(224,229,242,0.96);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 14px 30px rgba(171, 180, 208, 0.10);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 240px;
+    }
+    .task-card h3 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+    .task-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .task-card p { margin: 0; color: #4b5470; }
+    .task-card small { color: #7a839d; font-weight: 600; }
+    .empty-card {
+      border: 2px dashed rgba(148, 158, 196, 0.5);
+      border-radius: 26px;
+      padding: 34px;
+      text-align: center;
+      color: var(--muted);
+      background: rgba(255,255,255,0.55);
+    }
+    .table-scroll { overflow-x: auto; }
+    .tasks-table th:last-child, .tasks-table td:last-child { white-space: nowrap; }
+    .profile-footer-grid {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: end;
+    }
+    .profile-card.full-width { min-height: 100%; }
+    @media (max-width: 900px) {
+      .task-user-actions.compact-actions {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+      .task-user-actions.compact-actions .signed-pill,
+      .task-user-actions.compact-actions .task-top-btn {
+        width: 100%;
+      }
+      .profile-shell {
+        grid-template-columns: 1fr;
+      }
+      .bottom-corners { flex-direction: column; }
+      .bottom-corners > * { width: 100%; }
+      .full-page-shell { width: min(100vw - 24px, 1380px); }
     }
 
   </style>
@@ -566,8 +779,8 @@
           <p class="form-subtitle">Use your email and password to continue to H-HUB.</p>
           <form id="signInForm" class="stack">
             <div class="field">
-              <label for="signinEmail">Username or Email</label>
-              <div class="input-wrap"><input id="signinEmail" type="text" placeholder="you@example.com" required></div>
+              <label for="signinEmail">Email</label>
+              <div class="input-wrap"><input id="signinEmail" type="email" placeholder="yourname@ufl.edu" required></div>
             </div>
             <div class="field">
               <label for="signinPassword">Password</label>
@@ -594,10 +807,14 @@
               <label for="fullName">Full Name</label>
               <div class="input-wrap"><input id="fullName" type="text" placeholder="Enter your full name" required></div>
             </div>
+            <div class="field">
+              <label for="accountUfid">UFID</label>
+              <div class="input-wrap"><input id="accountUfid" type="text" inputmode="numeric" maxlength="8" placeholder="Enter your 8-digit UFID" required></div>
+            </div>
             <div class="field-grid two">
               <div class="field">
-                <label for="accountEmail">Username or Email</label>
-                <div class="input-wrap"><input id="accountEmail" type="email" placeholder="you@example.com" required></div>
+                <label for="accountEmail">Email</label>
+                <div class="input-wrap"><input id="accountEmail" type="email" placeholder="yourname@ufl.edu" required></div>
               </div>
               <div class="field">
                 <label for="accountPhone">Phone Number</label>
@@ -653,30 +870,75 @@
   </section>
 
   
-  <section class="app-screen hidden" id="taskScreen">
-    <div class="task-simple-shell">
-      <div class="task-simple-topbar">
-        <div class="hub-chip">
+
+  <section class="app-screen hidden" id="homeScreen">
+    <div class="full-page-shell">
+      <div class="top-compact-row">
+        <div class="hub-chip compact">
           <div class="mini-logo">H</div>
           <div class="hub-copy">
             <h3>H-HUB</h3>
             <p>Student Task Hub Dashboard</p>
           </div>
         </div>
+        <div class="task-user-actions compact-actions">
+          <div class="signed-pill">Signed in as <span id="signedInUserLabelHome">student@ufl.edu</span></div>
+          <button type="button" class="outline-btn task-top-btn" id="logoutBtnHome">Log Out</button>
+        </div>
+      </div>
+      <div class="page-nav-wrap">
+        <div class="site-nav-bar">
+          <button type="button" class="nav-menu-btn site-nav-link active" id="homeNavHome">Home</button>
+          <button type="button" class="nav-menu-btn site-nav-link" id="profileNavHome">Profile</button>
+          <button type="button" class="nav-menu-btn site-nav-link" id="createTaskNavHome">Create Task</button>
+          <button type="button" class="nav-menu-btn site-nav-link" id="viewTasksNavHome">View Tasks</button>
+        </div>
+      </div>
+      <div class="content-surface">
+        <div class="home-header">
+          <div>
+            <h2>Home</h2>
+            <p>Only the tasks created by you will appear here.</p>
+          </div>
+          <div class="task-count-badge"><span id="myTaskCount">0</span> My Tasks</div>
+        </div>
+        <div id="myTasksEmpty" class="empty-card">You have not created any tasks yet. Go to Create Task to add your first one.</div>
+        <div id="myTasksGrid" class="my-tasks-grid hidden"></div>
+      </div>
+    </div>
+  </section>
 
-        <div class="task-user-actions">
-          <div class="signed-pill">Signed in as <span id="signedInUserLabel">student</span></div>
+  <section class="app-screen hidden" id="taskScreen">
+    <div class="full-page-shell">
+      <div class="top-compact-row">
+        <div class="hub-chip compact">
+          <div class="mini-logo">H</div>
+          <div class="hub-copy">
+            <h3>H-HUB</h3>
+            <p>Student Task Hub Dashboard</p>
+          </div>
+        </div>
+        <div class="task-user-actions compact-actions">
+          <div class="signed-pill">Signed in as <span id="signedInUserLabel">student@ufl.edu</span></div>
           <button type="button" class="outline-btn task-top-btn" id="logoutBtn1">Log Out</button>
         </div>
       </div>
 
-      <div class="task-simple-card">
-        <div class="task-simple-head">
-          <div class="task-simple-title">
+      <div class="page-nav-wrap">
+        <div class="site-nav-bar">
+          <button type="button" class="nav-menu-btn site-nav-link" id="homeNavBtn">Home</button>
+          <button type="button" class="nav-menu-btn site-nav-link" id="profileNavTask">Profile</button>
+          <button type="button" class="nav-menu-btn site-nav-link active" id="createTaskNavBtn">Create Task</button>
+          <button type="button" class="nav-menu-btn site-nav-link" id="viewTasksNavBtn">View Tasks</button>
+        </div>
+      </div>
+
+      <div class="content-surface">
+        <div class="task-header">
+          <div>
             <h2>Create New Task</h2>
             <p>Add a task quickly and it will appear in your task list immediately.</p>
           </div>
-          <button type="button" class="outline-btn task-top-btn" id="viewProjectsBtnTop">View Tasks</button>
         </div>
 
         <form id="taskForm" class="task-form stack">
@@ -723,7 +985,7 @@
             <div class="input-wrap"><textarea id="taskPriorityDescription" placeholder="Explain why this task is urgent..."></textarea></div>
           </div>
 
-          <div class="task-bottom-actions task-action-bar">
+          <div class="bottom-corners">
             <button type="button" class="secondary-btn ghost-btn" id="backFromTaskBtn">← Back</button>
             <div class="task-submit-actions">
               <button type="reset" class="secondary-btn ghost-btn" id="taskResetBtn">Reset</button>
@@ -737,34 +999,32 @@
 
 
   <section class="app-screen hidden" id="projectsScreen">
-    <div class="center-shell app-shell">
-      <aside class="mini-sidebar">
-        <div>
-          <div class="mini-brand"><div class="mini-logo">H</div><span>Task Dasher</span></div>
-          <div class="mini-menu">
-            <button class="menu-item" id="profileNavProjects"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c1.6-4 14.4-4 16 0"></path></svg>Profile</button>
-            <button class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 17h5l-1.4-1.4a2 2 0 0 1-.6-1.4V11a6 6 0 1 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5"></path><path d="M10 21h4"></path></svg>Notifications <span class="menu-note">2</span></button>
-            <button class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33h0A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"></path></svg>Settings</button>
-          </div>
+    <div class="full-page-shell">
+      <div class="page-nav-wrap">
+        <div class="site-nav-bar">
+          <button type="button" class="nav-menu-btn site-nav-link" id="homeNavProjects">Home</button>
+          <button type="button" class="nav-menu-btn site-nav-link" id="profileNavProjects">Profile</button>
+          <button type="button" class="nav-menu-btn site-nav-link" id="createTaskNavProjects">Create Task</button>
+          <button type="button" class="nav-menu-btn site-nav-link active" id="viewTasksNavProjects">View Tasks</button>
         </div>
-        <button class="secondary-btn" id="logoutBtn2">Log out</button>
-      </aside>
+      </div>
 
-      <main class="page-wrap">
-        <div class="page-header">
-          <div class="page-title">
-            <h2>Tasks</h2>
-            <p>All created tasks will be listed here.</p>
+      <div class="content-surface">
+        <div class="view-header">
+          <div>
+            <h2>View Tasks</h2>
+            <p>See tasks created by you and by other students.</p>
           </div>
-          <div class="badge"><span id="taskCountProjects">0</span> tasks</div>
+          <div class="task-count-badge"><span id="taskCountProjects">0</span> Total Tasks</div>
         </div>
 
-        <div class="content-card tasks-table-wrap">
+        <div class="table-scroll">
           <div id="emptyState" class="table-empty">No tasks yet. Create your first task and it will appear here.</div>
           <table class="tasks-table hidden" id="projectsTable">
             <thead>
               <tr>
                 <th>Task</th>
+                <th>Created By</th>
                 <th>Category</th>
                 <th>Priority</th>
                 <th>Due Date</th>
@@ -774,67 +1034,67 @@
             </thead>
             <tbody id="projectsTableBody"></tbody>
           </table>
-          <div class="back-corner">
-            <button class="fab" id="backToTaskBtn">← Back</button>
-          </div>
         </div>
-      </main>
+
+        <div class="bottom-center">
+          <button class="secondary-btn" id="backToTaskBtn">← Back to Create Task</button>
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="app-screen hidden" id="profileScreen">
-    <div class="center-shell app-shell">
-      <aside class="mini-sidebar">
-        <div>
-          <div class="mini-brand"><div class="mini-logo">H</div><span>Task Dasher</span></div>
-          <div class="mini-menu">
-            <button class="menu-item active"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 20c1.6-4 14.4-4 16 0"></path></svg>Profile</button>
-            <button class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 17h5l-1.4-1.4a2 2 0 0 1-.6-1.4V11a6 6 0 1 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5"></path><path d="M10 21h4"></path></svg>Notifications <span class="menu-note">2</span></button>
-            <button class="menu-item"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33h0A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"></path></svg>Settings</button>
-          </div>
+    <div class="full-page-shell">
+      <div class="page-nav-wrap">
+        <div class="site-nav-bar">
+          <button type="button" class="nav-menu-btn site-nav-link" id="homeNavProfile">Home</button>
+          <button type="button" class="nav-menu-btn site-nav-link active" id="profileNavProfile">Profile</button>
+          <button type="button" class="nav-menu-btn site-nav-link" id="createTaskNavProfile">Create Task</button>
+          <button type="button" class="nav-menu-btn site-nav-link" id="viewTasksNavProfile">View Tasks</button>
         </div>
-        <button class="secondary-btn" id="logoutBtn3">Log out</button>
-      </aside>
+      </div>
 
-      <main class="page-wrap">
-        <div class="page-header">
-          <div class="page-title">
+      <div class="content-surface">
+        <div class="profile-header">
+          <div>
             <h2>Profile</h2>
             <p>Your account details saved from the create account page.</p>
           </div>
-          <div class="badge">Student</div>
         </div>
 
         <div class="profile-shell">
           <div class="profile-hero">
-            <button class="back-mini" id="profileBackBtn">←</button>
             <div class="avatar">🙂</div>
             <h3 id="profileNameHero">Student Name</h3>
-            <p id="profileEmailHero">student@example.com</p>
+            <p id="profileEmailHero">student@ufl.edu</p>
           </div>
 
-          <div class="profile-card">
+          <div class="profile-card full-width">
             <div class="detail-row"><span>Name</span><span id="profileName">-</span></div>
+            <div class="detail-row"><span>UFID</span><span id="profileUfid">-</span></div>
             <div class="detail-row"><span>Email</span><span id="profileEmail">-</span></div>
             <div class="detail-row"><span>Gender</span><span id="profileGender">-</span></div>
             <div class="detail-row"><span>Date of Birth</span><span id="profileDob">-</span></div>
             <div class="detail-row"><span>Phone Number</span><span id="profilePhone">-</span></div>
             <div class="profile-actions">
-              <div class="action-card">Change Password</div>
-              <div class="action-card">My Orders</div>
+              <div class="action-card">Account Details</div>
+              <div class="action-card">Task Support</div>
               <div class="action-card">Help</div>
-            </div>
-            <div class="back-corner">
-              <button class="fab" id="backToProjectsFromProfile">← Back</button>
             </div>
           </div>
         </div>
-      </main>
+
+        <div class="bottom-corners">
+          <button class="secondary-btn" id="profileBackBtn">← Back</button>
+          <button class="outline-btn" id="logoutBtn3">Log out</button>
+        </div>
+      </div>
     </div>
   </section>
 
   <script>
     const authScreen = document.getElementById('authScreen');
+    const homeScreen = document.getElementById('homeScreen');
     const taskScreen = document.getElementById('taskScreen');
     const projectsScreen = document.getElementById('projectsScreen');
     const profileScreen = document.getElementById('profileScreen');
@@ -859,8 +1119,7 @@
     const projectsTable = document.getElementById('projectsTable');
     const emptyState = document.getElementById('emptyState');
 
-    const taskCountTop = document.getElementById('taskCountTop');
-    const taskCountProjects = document.getElementById('taskCountProjects');
+        const taskCountProjects = document.getElementById('taskCountProjects');
 
     const STORAGE_USER = 'studentTaskHubUser';
     const STORAGE_TASKS = 'studentTaskHubTasks';
@@ -885,7 +1144,7 @@
     }
 
     function showScreen(screen) {
-      [authScreen, taskScreen, projectsScreen, profileScreen].forEach(s => s.classList.add('hidden'));
+      [authScreen, homeScreen, taskScreen, projectsScreen, profileScreen].forEach(s => s.classList.add('hidden'));
       screen.classList.remove('hidden');
     }
 
@@ -904,8 +1163,34 @@
       showScreen(authScreen);
     }
 
+    function seedSampleTasks(tasks) {
+      if (tasks && tasks.length) return tasks;
+      return [
+        {
+          title: 'Need notes for COP5615',
+          category: 'Academic',
+          priority: 'High',
+          date: getTodayLocalISO(),
+          description: 'Looking for help with distributed systems lecture notes.',
+          priorityDescription: 'Quiz is coming soon.',
+          createdBy: 'otherstudent1@ufl.edu'
+        },
+        {
+          title: 'Looking for carpool to campus',
+          category: 'Personal',
+          priority: 'Low',
+          date: getTodayLocalISO(),
+          description: 'Anyone going to campus in the morning can connect with me.',
+          priorityDescription: '',
+          createdBy: 'otherstudent2@ufl.edu'
+        }
+      ];
+    }
     function getTasks() {
-      return JSON.parse(localStorage.getItem(STORAGE_TASKS) || '[]');
+      const tasks = JSON.parse(localStorage.getItem(STORAGE_TASKS) || '[]');
+      const seeded = seedSampleTasks(tasks);
+      if (seeded.length !== tasks.length) saveTasks(seeded);
+      return seeded;
     }
     function saveTasks(tasks) {
       localStorage.setItem(STORAGE_TASKS, JSON.stringify(tasks));
@@ -914,7 +1199,8 @@
       const saved = JSON.parse(localStorage.getItem(STORAGE_USER) || 'null');
       return saved || {
         name: 'Student User',
-        email: 'student@example.com',
+        ufid: '00000000',
+        email: 'student@ufl.edu',
         gender: 'Prefer not to say',
         dob: '-',
         phone: '-',
@@ -923,6 +1209,46 @@
     }
     function saveUser(user) {
       localStorage.setItem(STORAGE_USER, JSON.stringify(user));
+    }
+
+    function isValidUflEmail(email) {
+      return /^[a-zA-Z0-9._%+-]+@ufl\.edu$/i.test(email);
+    }
+
+    function isValidUfid(ufid) {
+      return /^\d{8}$/.test(ufid);
+    }
+
+    function setActiveNavButton(activeKey) {
+      const normalize = (value) => String(value || '').toLowerCase().replace(/\s+/g, ' ').trim();
+      const key = normalize(activeKey);
+      const labelMap = {
+        home: 'home',
+        homenavbtn: 'home',
+        homenavprojects: 'home',
+        homenavprofile: 'home',
+        homenavhome: 'home',
+        profile: 'profile',
+        profilenavtask: 'profile',
+        profilenavprojects: 'profile',
+        profilenavprofile: 'profile',
+        profilenavhome: 'profile',
+        'create task': 'create task',
+        createtasknavbtn: 'create task',
+        createtasknavprojects: 'create task',
+        createtasknavprofile: 'create task',
+        createtasknavhome: 'create task',
+        'view tasks': 'view tasks',
+        viewtasksnavbtn: 'view tasks',
+        viewtasksnavprojects: 'view tasks',
+        viewtasksnavprofile: 'view tasks',
+        viewtasksnavhome: 'view tasks'
+      };
+      const target = labelMap[key] || key;
+      document.querySelectorAll('.nav-menu-btn').forEach(btn => {
+        const btnKey = labelMap[normalize(btn.id)] || normalize(btn.textContent);
+        btn.classList.toggle('active', btnKey === target);
+      });
     }
 
     function formatDate(dateStr) {
@@ -934,12 +1260,14 @@
 
     function updateCounters() {
       const count = getTasks().length;
-      if (taskCountTop) taskCountTop.textContent = count;
       if (taskCountProjects) taskCountProjects.textContent = count;
+      const myCount = document.getElementById('myTaskCount');
+      if (myCount) myCount.textContent = getMyTasks().length;
     }
 
     function renderProjects() {
       const tasks = getTasks();
+      const currentUser = (getUser().email || '').toLowerCase();
       projectsTableBody.innerHTML = '';
       updateCounters();
       if (!tasks.length) {
@@ -950,14 +1278,17 @@
       emptyState.classList.add('hidden');
       projectsTable.classList.remove('hidden');
       tasks.forEach((task, index) => {
+        const owner = task.createdBy || 'student@ufl.edu';
+        const isMine = owner.toLowerCase() === currentUser;
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><strong>${task.title}</strong></td>
+          <td>${owner}${isMine ? ' <strong>(You)</strong>' : ''}</td>
           <td><span class="pill ${task.category.toLowerCase()}">${task.category}</span></td>
           <td><span class="pill ${task.priority.toLowerCase() === 'medium' ? 'medium' : task.priority.toLowerCase()}">${task.priority}</span></td>
           <td>${formatDate(task.date)}</td>
           <td>${task.description}${task.priorityDescription ? `<div class="priority-note-line"><strong>Urgent:</strong> ${task.priorityDescription}</div>` : ''}</td>
-          <td><button class="text-link" type="button" onclick="deleteTask(${index})">Delete</button></td>
+          <td>${isMine ? `<button class="text-link" type="button" onclick="deleteTask(${index})">Delete</button>` : '<span style="color:#7a839d;">-</span>'}</td>
         `;
         projectsTableBody.appendChild(tr);
       });
@@ -965,18 +1296,58 @@
 
     window.deleteTask = function(index) {
       const tasks = getTasks();
+      const currentUser = (getUser().email || '').toLowerCase();
+      if ((tasks[index].createdBy || '').toLowerCase() !== currentUser) return;
       tasks.splice(index, 1);
       saveTasks(tasks);
       renderProjects();
+      renderHomeTasks();
     }
 
 
     function syncSignedInUser() {
       const user = getUser();
-      const label = document.getElementById('signedInUserLabel');
-      if (!label) return;
-      const preferred = (user.email && user.email.includes('@')) ? user.email.split('@')[0] : (user.name || 'student');
-      label.textContent = preferred;
+      ['signedInUserLabel', 'signedInUserLabelHome'].forEach(id => {
+        const label = document.getElementById(id);
+        if (label) label.textContent = user.email || 'student@ufl.edu';
+      });
+    }
+
+    function getMyTasks() {
+      const user = getUser();
+      return getTasks().filter(task => (task.createdBy || '').toLowerCase() === (user.email || '').toLowerCase());
+    }
+
+    function renderHomeTasks() {
+      const grid = document.getElementById('myTasksGrid');
+      const empty = document.getElementById('myTasksEmpty');
+      const count = document.getElementById('myTaskCount');
+      if (!grid || !empty || !count) return;
+      const tasks = getMyTasks();
+      count.textContent = tasks.length;
+      grid.innerHTML = '';
+      if (!tasks.length) {
+        empty.classList.remove('hidden');
+        grid.classList.add('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+      grid.classList.remove('hidden');
+      tasks.forEach(task => {
+        const card = document.createElement('div');
+        card.className = 'task-card';
+        card.innerHTML = `
+          <small>${formatDate(task.date)}</small>
+          <h3>${task.title}</h3>
+          <div class="task-meta">
+            <span class="pill ${task.category.toLowerCase()}">${task.category}</span>
+            <span class="pill ${task.priority.toLowerCase() === 'medium' ? 'medium' : task.priority.toLowerCase()}">${task.priority}</span>
+          </div>
+          <p>${task.description}</p>
+          ${task.priorityDescription ? `<p><strong>Urgent:</strong> ${task.priorityDescription}</p>` : ''}
+        `;
+        grid.appendChild(card);
+      });
     }
 
     function updatePriorityField() {
@@ -996,6 +1367,7 @@
       document.getElementById('profileNameHero').textContent = user.name || '-';
       document.getElementById('profileEmailHero').textContent = user.email || '-';
       document.getElementById('profileName').textContent = user.name || '-';
+      document.getElementById('profileUfid').textContent = user.ufid || '-';
       document.getElementById('profileEmail').textContent = user.email || '-';
       document.getElementById('profileGender').textContent = user.gender || '-';
       document.getElementById('profileDob').textContent = user.dob ? formatDate(user.dob) : '-';
@@ -1022,9 +1394,20 @@
         alert('Passwords do not match.');
         return;
       }
+      const email = document.getElementById('accountEmail').value.trim().toLowerCase();
+      const ufid = document.getElementById('accountUfid').value.trim();
+      if (!isValidUflEmail(email)) {
+        alert('Please use a valid @ufl.edu email address only.');
+        return;
+      }
+      if (!isValidUfid(ufid)) {
+        alert('Please enter a valid 8-digit UFID.');
+        return;
+      }
       const user = {
         name: document.getElementById('fullName').value.trim(),
-        email: document.getElementById('accountEmail').value.trim(),
+        ufid,
+        email,
         phone: document.getElementById('accountPhone').value.trim(),
         gender: document.getElementById('accountGender').value,
         dob: document.getElementById('accountDob').value,
@@ -1045,9 +1428,13 @@
         alert('Please enter your email and password.');
         return;
       }
+      if (!isValidUflEmail(email)) {
+        alert('Please sign in using your @ufl.edu email address only.');
+        return;
+      }
       const hasSavedUser = !!localStorage.getItem(STORAGE_USER);
       const user = getUser();
-      const canSignIn = !hasSavedUser || ((email === user.email || email === user.name) && password === user.password);
+      const canSignIn = !hasSavedUser || (email.toLowerCase() === user.email.toLowerCase() && password === user.password);
       if (!canSignIn) {
         alert('Please use the account details from Create Account.');
         return;
@@ -1057,7 +1444,9 @@
       updateCounters();
       syncDateLimits();
       updatePriorityField();
-      showScreen(taskScreen);
+      setActiveNavButton('home');
+      renderHomeTasks();
+      showScreen(homeScreen);
     }
 
     if (signInForm) signInForm.addEventListener('submit', (e) => {
@@ -1094,6 +1483,7 @@
         date: selectedDate,
         description: document.getElementById('taskDescription').value.trim(),
         priorityDescription,
+        createdBy: getUser().email
       };
       const tasks = getTasks();
       tasks.push(task);
@@ -1103,31 +1493,98 @@
       updatePriorityField();
       updateCounters();
       renderProjects();
-      showScreen(projectsScreen);
+      renderHomeTasks();
+      setActiveNavButton('home');
+      showScreen(homeScreen);
     });
 
-    const viewProjectsBtn = document.getElementById('viewProjectsBtn');
-    if (viewProjectsBtn) viewProjectsBtn.addEventListener('click', () => {
+    const homeNavBtn = document.getElementById('homeNavBtn');
+    const createTaskNavBtn = document.getElementById('createTaskNavBtn');
+    const viewTasksNavBtn = document.getElementById('viewTasksNavBtn');
+
+    if (homeNavBtn) homeNavBtn.addEventListener('click', () => {
+      setActiveNavButton('home');
+      renderHomeTasks();
+      showScreen(homeScreen);
+    });
+    if (createTaskNavBtn) createTaskNavBtn.addEventListener('click', () => {
+      setActiveNavButton('create task');
+      showScreen(taskScreen);
+    });
+    if (viewTasksNavBtn) viewTasksNavBtn.addEventListener('click', () => {
+      setActiveNavButton('view tasks');
       renderProjects();
       showScreen(projectsScreen);
     });
-    if (viewProjectsBtnTop) viewProjectsBtnTop.addEventListener('click', () => {
-      renderProjects();
-      showScreen(projectsScreen);
-    });
-    if (backFromTaskBtn) backFromTaskBtn.addEventListener('click', () => showAuth('signin'));
+    if (backFromTaskBtn) backFromTaskBtn.addEventListener('click', () => { setActiveNavButton('home'); renderHomeTasks(); showScreen(homeScreen); });
     const backToTaskBtn = document.getElementById('backToTaskBtn');
-    if (backToTaskBtn) backToTaskBtn.addEventListener('click', () => showScreen(taskScreen));
+    if (backToTaskBtn) backToTaskBtn.addEventListener('click', () => { setActiveNavButton('create task'); showScreen(taskScreen); });
+    const homeNavHome = document.getElementById('homeNavHome');
+    if (homeNavHome) homeNavHome.addEventListener('click', () => {
+      setActiveNavButton('home');
+      renderHomeTasks();
+      showScreen(homeScreen);
+    });
+    const profileNavHome = document.getElementById('profileNavHome');
+    if (profileNavHome) profileNavHome.addEventListener('click', () => { setActiveNavButton('profile'); openProfile(homeScreen); });
+    const createTaskNavHome = document.getElementById('createTaskNavHome');
+    if (createTaskNavHome) createTaskNavHome.addEventListener('click', () => { setActiveNavButton('create task'); showScreen(taskScreen); });
+    const viewTasksNavHome = document.getElementById('viewTasksNavHome');
+    if (viewTasksNavHome) viewTasksNavHome.addEventListener('click', () => { setActiveNavButton('view tasks'); renderProjects(); showScreen(projectsScreen); });
+
     const profileNavProjects = document.getElementById('profileNavProjects');
     if (profileNavProjects) profileNavProjects.addEventListener('click', () => openProfile(projectsScreen));
     const profileNavTask = document.getElementById('profileNavTask');
-    if (profileNavTask) profileNavTask.addEventListener('click', () => openProfile(taskScreen));
+    if (profileNavTask) profileNavTask.addEventListener('click', () => { setActiveNavButton('profile'); openProfile(taskScreen); });
     const profileBackBtn = document.getElementById('profileBackBtn');
-    if (profileBackBtn) profileBackBtn.addEventListener('click', () => showScreen(profileReturnScreen));
-    const backToProjectsFromProfile = document.getElementById('backToProjectsFromProfile');
-    if (backToProjectsFromProfile) backToProjectsFromProfile.addEventListener('click', () => showScreen(profileReturnScreen));
+    if (profileBackBtn) profileBackBtn.addEventListener('click', () => {
+      if (profileReturnScreen === projectsScreen) { setActiveNavButton('view tasks'); renderProjects(); }
+      else if (profileReturnScreen === homeScreen) { setActiveNavButton('home'); renderHomeTasks(); }
+      else { setActiveNavButton('create task'); }
+      showScreen(profileReturnScreen);
+    });
 
-    ['logoutBtn1','logoutBtn2','logoutBtn3'].forEach(id => {
+    const homeNavProjects = document.getElementById('homeNavProjects');
+    if (homeNavProjects) homeNavProjects.addEventListener('click', () => {
+      setActiveNavButton('home');
+      renderHomeTasks();
+      showScreen(homeScreen);
+    });
+    const homeNavProfile = document.getElementById('homeNavProfile');
+    if (homeNavProfile) homeNavProfile.addEventListener('click', () => {
+      setActiveNavButton('home');
+      renderHomeTasks();
+      showScreen(homeScreen);
+    });
+    const createTaskNavProjects = document.getElementById('createTaskNavProjects');
+    if (createTaskNavProjects) createTaskNavProjects.addEventListener('click', () => {
+      setActiveNavButton('create task');
+      showScreen(taskScreen);
+    });
+    const createTaskNavProfile = document.getElementById('createTaskNavProfile');
+    if (createTaskNavProfile) createTaskNavProfile.addEventListener('click', () => {
+      setActiveNavButton('create task');
+      showScreen(taskScreen);
+    });
+    const viewTasksNavProjects = document.getElementById('viewTasksNavProjects');
+    if (viewTasksNavProjects) viewTasksNavProjects.addEventListener('click', () => {
+      setActiveNavButton('view tasks');
+      renderProjects();
+      showScreen(projectsScreen);
+    });
+    const viewTasksNavProfile = document.getElementById('viewTasksNavProfile');
+    if (viewTasksNavProfile) viewTasksNavProfile.addEventListener('click', () => {
+      setActiveNavButton('view tasks');
+      renderProjects();
+      showScreen(projectsScreen);
+    });
+    const profileNavProfile = document.getElementById('profileNavProfile');
+    if (profileNavProfile) profileNavProfile.addEventListener('click', () => {
+      setActiveNavButton('profile');
+      openProfile(profileScreen);
+    });
+
+    ['logoutBtnHome','logoutBtn1','logoutBtn3'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.addEventListener('click', () => showAuth('signin'));
     });
@@ -1135,6 +1592,7 @@
     fillProfile();
     syncSignedInUser();
     renderProjects();
+    renderHomeTasks();
     syncDateLimits();
     updatePriorityField();
     showAuth('signin');

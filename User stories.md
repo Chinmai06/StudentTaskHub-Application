@@ -14,3 +14,6 @@
 5. As a student, I want to view the tasks I have claimed so that I know which tasks I need to complete.
 6. As a student, I want to mark a task as completed after finishing it so that the system updates its status.
 7. As a student, I want to search tasks by keywords so that I can quickly find the tasks I need.
+8. As a student, I want to update my profile details successfully so that my personal information stays accurate and up to date.
+9. As a student, I want a back button on the Tasks page so that I can easily navigate to the previous page without confusion.
+10. As a student, I want the logout button to be clearly visible and properly placed so that I can securely log out of my account when needed.
