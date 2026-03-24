@@ -14,7 +14,7 @@ These are the user stories for sprint2
 9. As a student, I want a back button on the Tasks page so that I can easily navigate to the previous page without confusion.
 10. As a student, I want the logout button to be clearly visible and properly placed so that I can securely log out of my account when needed.
 
-<<<<<<< HEAD
+
 | Issue # | Title                                                     | Description                                                                           | Status    |
 | ------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------- | --------- |
 | 27      | Logout button not visible / improperly placed             | Fix UI issue where logout button is missing or incorrectly positioned                 | Completed |
