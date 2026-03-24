@@ -137,7 +137,7 @@ go test ./handlers/ -v
 | TestMarkTaskAsCompleted | Claims task then marks as done, verifies status is "done" |
 
 ---
->>>>>>> b377c5f912481f10342a0f5832da8901bfa59bef
+
 
 ## Backend API Documentation
 
