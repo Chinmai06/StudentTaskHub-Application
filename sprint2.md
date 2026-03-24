@@ -35,6 +35,13 @@ These are the user stories for sprint2
 In Backend Prespective all the 8 issues are completed
 
 In Frontend Prespective all the 6 issues are completed
+## Frontend Unit Tests
+
+To be added by frontend team
+
+## Cypress Tests
+
+To be added by frontend team
 
 ## Backend Unit Tests
 
