@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { isUflEmail, isValidUfid } from '../utils/validation';
+import { useAuth } from './context/AuthContext';
+import { isUflEmail, isValidUfid } from './utils/validation';
 
 const initialState = {
   email: '',

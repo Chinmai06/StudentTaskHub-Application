@@ -1,6 +1,6 @@
 import TaskCard from '../components/TaskCard';
-import { useAuth } from '../context/AuthContext';
-import { useTasks } from '../context/TaskContext';
+import { useAuth } from './context/AuthContext';
+import { useTasks } from './context/TaskContext';
 import { filterTasksCreatedBy, sortTasksByPriority } from '../utils/taskHelpers';
 
 function HomePage() {
