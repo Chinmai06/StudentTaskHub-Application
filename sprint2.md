@@ -24,6 +24,9 @@ These are the user stories for sprint2
 | 19      | Fetch tasks claimed by user                               | Retrieve all tasks that have been claimed by the authenticated user.                                                                                                                  | Completed |
 | 18      | Fetch tasks created by user                               | Retrieve all tasks from the database that were created by the authenticated user.                                                                                                     | Completed |
 | 17      | Implement API to fetch tasks created by a user            | creating API endpoints for fetch task                                                                                                                                                 | Completed |
-| 16      | Unit Testing                                              | Write and execute unit tests for all backend APIs including validation and edge cases                                                                                                 | Completed |
 | 15      | Create users table in database                            | Add table in Database                                                                                                                                                                 | Completed |
 | 14      | Implement basic user authentication                       | Create a simple login system to identify users in the system.                                                                                                                         | Completed |
+
+In Backend Prespective all the 8 issues are completed
+
+In Frontend Prespective all the 6 issues are completed
