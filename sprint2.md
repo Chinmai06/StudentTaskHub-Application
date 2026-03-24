@@ -36,6 +36,75 @@ In Backend Prespective all the 8 issues are completed
 
 In Frontend Prespective all the 6 issues are completed
 
+Backend Unit Tests
+
+All tests are in handlers/handler_test.go. Run with:
+
+go test ./handlers/ -v
+Register Tests (4 tests)
+
+Test Name	Description
+TestRegister_Success	Registers a new user and verifies 201 response with correct username
+TestRegister_MissingFields	Sends incomplete data, expects 400 error
+TestRegister_DuplicateUsername	Registers same username twice, expects 409 conflict
+TestRegister_ShortPassword	Sends password under 6 characters, expects 400 error
+Login Tests (4 tests)
+
+Test Name	Description
+TestLogin_Success	Logs in with correct credentials, verifies 200 response
+TestLogin_WrongPassword	Uses wrong password, expects 401 unauthorized
+TestLogin_NonExistentUser	Tries to login as non-existent user, expects 401
+TestLogin_MissingFields	Sends incomplete data, expects 400 error
+CreateTask Tests (5 tests)
+
+Test Name	Description
+TestCreateTask_Success	Creates task with all fields, verifies title/priority/status
+TestCreateTask_MissingFields	Sends incomplete data, expects 400 error
+TestCreateTask_InvalidDeadline	Sends bad date format, expects 400 error
+TestCreateTask_DefaultPriority	Creates task without priority, verifies default is "normal"
+TestCreateTask_UnregisteredUser	Non-existent user tries to create task, expects 400 error
+GetTasks Tests (11 tests)
+
+Test Name	Description
+TestGetTasks_Empty	Gets tasks from empty database, expects empty array
+TestGetTasks_FilterByStatus	Filters tasks by status=open, verifies correct count
+TestGetTasks_FilterByCreatedUser	Filters tasks by created_by=nikita, verifies only nikita's tasks returned
+TestGetTasks_FilterByClaimedUser	Claims a task as alice, filters by claimed_by=alice, verifies correct result
+TestGetTasks_Search	Searches tasks by keyword "ML", verifies only matching task returned
+TestSearchTasks_ByKeyword	Creates 3 tasks, searches "ML", verifies match in description
+TestGetTasks_SearchCaseInsensitive	Searches with lowercase "ml", verifies case-insensitive match
+TestGetTasks_FilterByPriority	Filters by priority=high, verifies only high priority returned
+TestGetTasks_FilterByDeadlineRange	Filters tasks before a date, verifies correct filtering
+TestGetTasks_SortByDeadline	Sorts tasks by deadline, verifies earliest first
+GetTask Tests (2 tests)
+
+Test Name	Description
+TestGetTask_Success	Gets task by ID, verifies correct task returned
+TestGetTask_NotFound	Gets non-existent task ID, expects 404 error
+UpdateTask Tests (2 tests)
+
+Test Name	Description
+TestUpdateTask_Success	Creator updates task title, verifies change
+TestUpdateTask_Forbidden	Non-creator tries to edit, expects 403 forbidden
+DeleteTask Tests (2 tests)
+
+Test Name	Description
+TestDeleteTask_Success	Creator deletes task, verifies 200 response
+TestDeleteTask_Forbidden	Non-creator tries to delete, expects 403 forbidden
+ClaimTask Tests (2 tests)
+
+Test Name	Description
+TestClaimTask_Success	User claims open task, verifies status changes to "claimed"
+TestClaimTask_AlreadyClaimed	Second user tries to claim already claimed task, expects 409 conflict
+UpdateTaskStatus Tests (4 tests)
+
+Test Name	Description
+TestUpdateTaskStatus_Success	Claimer updates status to in_progress, verifies change
+TestUpdateTaskStatus_InvalidStatus	Sends invalid status value, expects 400 error
+TestUpdateTaskStatus_Forbidden	Unauthorized user tries to update status, expects 403 forbidden
+TestMarkTaskAsCompleted	Claims task then marks as done, verifies status is "done"
+
+
 
 ## Backend API Documentation
 
