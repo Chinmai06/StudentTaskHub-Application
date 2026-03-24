@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, useState } from 'react';
-import { mockTasks } from '../data/mockTasks';
-import { createTaskPayload } from '../utils/taskHelpers';
+import { mockTasks } from './data/mockTasks';
+import { createTaskPayload } from './utils/taskHelpers';
 
 const TaskContext = createContext(null);
 const STORAGE_KEY = 'student-task-hub-tasks';

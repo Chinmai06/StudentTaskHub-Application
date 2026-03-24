@@ -1,4 +1,4 @@
-import { formatPostedDate } from '../utils/taskHelpers';
+import { formatPostedDate } from './utils/taskHelpers';
 
 function TaskCard({ task }) {
   return (

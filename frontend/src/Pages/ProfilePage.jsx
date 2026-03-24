@@ -1,6 +1,6 @@
-import { useAuth } from '../context/AuthContext';
-import { useTasks } from '../context/TaskContext';
-import { filterTasksCreatedBy } from '../utils/taskHelpers';
+import { useAuth } from './context/AuthContext';
+import { useTasks } from './context/TaskContext';
+import { filterTasksCreatedBy } from './utils/taskHelpers';
 
 function ProfilePage() {
   const { user } = useAuth();

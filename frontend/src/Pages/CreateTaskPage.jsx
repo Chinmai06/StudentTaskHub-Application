@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useTasks } from '../context/TaskContext';
-import { isNonEmptyText } from '../utils/validation';
+import { useAuth } from './context/AuthContext';
+import { useTasks } from './context/TaskContext';
+import { isNonEmptyText } from './utils/validation';
 
 const initialForm = {
   title: '',
