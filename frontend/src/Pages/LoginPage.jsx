@@ -1,23 +1,23 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
-import { isUflEmail, isValidUfid } from './utils/validation';
-
-const initialState = {
-  email: '',
-  ufid: ''
-};
+import { useAuth } from '../context/AuthContext';
+import { isUflEmail, isValidUfid } from '../utils/validation';
 
 function LoginPage() {
-  const [formState, setFormState] = useState(initialState);
-  const [errors, setErrors] = useState({});
-  const { login } = useAuth();
   const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const [formData, setFormData] = useState({
+    email: '',
+    ufid: ''
+  });
+
+  const [errors, setErrors] = useState({});
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormState((currentState) => ({
-      ...currentState,
+    setFormData((current) => ({
+      ...current,
       [name]: value
     }));
   };
@@ -27,11 +27,11 @@ function LoginPage() {
 
     const nextErrors = {};
 
-    if (!isUflEmail(formState.email)) {
+    if (!isUflEmail(formData.email)) {
       nextErrors.email = 'Use a valid @ufl.edu email address.';
     }
 
-    if (!isValidUfid(formState.ufid)) {
+    if (!isValidUfid(formData.ufid)) {
       nextErrors.ufid = 'UFID must be exactly 8 digits.';
     }
 
@@ -42,8 +42,8 @@ function LoginPage() {
     }
 
     login({
-      email: formState.email.trim().toLowerCase(),
-      ufid: formState.ufid.trim()
+      email: formData.email.trim().toLowerCase(),
+      ufid: formData.ufid.trim()
     });
 
     navigate('/home');
@@ -52,23 +52,24 @@ function LoginPage() {
   return (
     <section className="auth-page">
       <div className="auth-card">
-        <p className="eyebrow">React Frontend</p>
-        <h1>Welcome to StudentTaskHub</h1>
-        <p className="auth-copy">
-          Sign in using your UFL email and UFID to create and manage student tasks.
+        <p className="eyebrow">Student Task Hub</p>
+        <h1>Sign In</h1>
+        <p className="auth-subtitle">
+          Use your UFL email and UFID to continue.
         </p>
-        <form onSubmit={handleSubmit} className="form-grid" data-testid="login-form">
+
+        <form onSubmit={handleSubmit} className="auth-form">
           <label>
             Email
             <input
               type="email"
               name="email"
               placeholder="name@ufl.edu"
-              value={formState.email}
+              value={formData.email}
               onChange={handleChange}
             />
           </label>
-          {errors.email ? <p className="error-text">{errors.email}</p> : null}
+          {errors.email && <p>{errors.email}</p>}
 
           <label>
             UFID
@@ -76,16 +77,13 @@ function LoginPage() {
               type="text"
               name="ufid"
               placeholder="8 digit UFID"
-              value={formState.ufid}
+              value={formData.ufid}
               onChange={handleChange}
-              maxLength={8}
             />
           </label>
-          {errors.ufid ? <p className="error-text">{errors.ufid}</p> : null}
+          {errors.ufid && <p>{errors.ufid}</p>}
 
-          <button type="submit" className="primary-button">
-            Sign In
-          </button>
+          <button type="submit">Sign In</button>
         </form>
       </div>
     </section>
