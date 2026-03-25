@@ -54,6 +54,32 @@ Frontend test setup/config files:
 - `frontend/src/test/setupTests.js`
 - `frontend/vite.config.js`
 
+## Frontend Unit Test Summary
+
+Frontend unit tests currently validate the **Sign In Functionality** flow and the shared **input validation helpers** used by the login page.
+
+- **Total frontend unit tests passed:** 8
+- **Total frontend test files passed:** 2
+
+### Login Page Tests (2 tests)
+
+| Test Name | Description |
+|-----------|-------------|
+| shows validation errors for invalid email and UFID | Verifies that invalid email and invalid UFID inputs display validation messages and do not allow login |
+| logs in a valid user and navigates to /home | Verifies that valid UFL email and UFID input trigger login and redirect the user to the home page |
+
+### Validation Helper Tests (6 tests)
+
+| Test Name | Description |
+|-----------|-------------|
+| accepts a valid @ufl.edu email | Confirms that a valid UFL email passes validation |
+| rejects a non-UFL email | Confirms that a non-UFL email fails validation |
+| accepts a valid 8 digit UFID | Confirms that a valid 8-digit UFID passes validation |
+| rejects an invalid UFID | Confirms that an invalid UFID fails validation |
+| accepts non-empty trimmed text | Confirms that meaningful trimmed text is accepted |
+| rejects empty trimmed text | Confirms that blank or whitespace-only input is rejected |
+
+
 
 ## Cypress Tests
 
