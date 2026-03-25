@@ -40,7 +40,6 @@ In Frontend Prespective all the 5 issues are completed
 In Backend Prespective all the 8 issues are completed
 
 In Frontend Prespective all the 6 issues are completed
-## Frontend Unit Tests
 
 ## Frontend Unit Tests
 
