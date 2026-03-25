@@ -42,7 +42,18 @@ In Backend Prespective all the 8 issues are completed
 In Frontend Prespective all the 6 issues are completed
 ## Frontend Unit Tests
 
-To be added by frontend team
+## Frontend Unit Tests
+
+All frontend unit tests are located in:
+
+- `frontend/src/pages/LoginPage.test.jsx`
+- `frontend/src/utils/validation.test.js`
+
+Frontend test setup/config files:
+
+- `frontend/src/test/setupTests.js`
+- `frontend/vite.config.js`
+
 
 ## Cypress Tests
 
