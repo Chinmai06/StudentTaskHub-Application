@@ -81,8 +81,78 @@ Frontend unit tests currently validate the **Sign In Functionality** flow and th
 
 
 ## Cypress Tests
+describe('StudentTaskHub - Complete E2E Tests', () => {
+  beforeEach(() => cy.visit('http://localhost:3000'));
 
-To be added by frontend team
+  it('Login → Create Task → Verify', () => {
+    // Login
+    cy.get('input[type="email"], input[placeholder*="email"]').type('test@ufl.edu');
+    cy.get('input[type="password"]').type('password123');
+    cy.get('button[type="submit"], button').contains(/sign in|login/i).click();
+    
+    cy.contains(/tasks|dashboard/i);
+    
+    // Create Task
+    cy.contains(/create|new/i).click();
+    cy.get('input[placeholder*="title"]').type('Cypress Test Task');
+    cy.get('textarea').type('E2E test');
+    cy.get('input[type="date"]').type('2026-04-01');
+    cy.get('select').select('high');
+    cy.get('button').contains(/create|save/i).click();
+    
+    cy.contains('Cypress Test Task').should('be.visible');
+  });
+
+  it('Search Tasks', () => {
+    cy.get('input[placeholder*="email"]').type('test@ufl.edu');
+    cy.get('input[type="password"]').type('password123');
+    cy.get('button').contains(/sign in/i).click();
+    
+    cy.get('input[placeholder*="search"]').type('Cypress');
+    cy.contains('Cypress Test Task');
+  });
+
+  it('Logout', () => {
+    cy.get('input[placeholder*="email"]').type('test@ufl.edu');
+    cy.get('input[type="password"]').type('password123');
+    cy.get('button').contains(/sign in/i).click();
+    
+    cy.contains(/logout|sign out/i).click();
+    cy.url().should('include', 'login');
+  });
+});
+
+## CYPRESS E2E TESTS (5 User Stories)
+
+**File:** `frontend/cypress/e2e/create-task.cy.js`
+
+| Test | Coverage | Status |
+|------|----------|--------|
+| Login+Create Task | Stories 1,2,4  |
+| Search Tasks | Story 7 | 
+| Logout | Story 10 | 
+
+**Run:** `cd frontend && npx cypress run`
+
+# 2.1 Navigate to repo root
+cd /path/to/your/student-task-hub
+
+# 2.2 Force add Cypress (ignores .gitignore)
+git add -f frontend/cypress/e2e/create-task.cy.js
+git add sprint2.md
+
+# 2.3 Commit with professor keywords
+git commit -m 
+# 2.4 Push to GitHub
+git push origin main
+
+# 3.1 Terminal 1: Start your app
+cd frontend
+npm start  # Backend on :8080?
+
+# 3.2 Terminal 2: Run Cypress (SCREEN RECORD THIS)
+cd frontend
+npx cypress run --headed
 
 ## Backend Unit Tests
 
