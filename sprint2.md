@@ -17,6 +17,8 @@ These are the user stories for sprint2
 
 | Issue # | Title                                                     | Description                                                                           | Status    |
 | ------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------- | --------- |
+| 29      | issue with implementation of search task functionality | fix the search functionality's in the application is not working as expected.| in-progress |
+| 28      | issue with implementation of claim functionality            | Fix The claim functionality in the application is not working as expected | in-progress |
 | 27      | Logout button not visible / improperly placed             | Fix UI issue where logout button is missing or incorrectly positioned                 | Completed |
 | 26      | Back button missing on Tasks page                         | Add navigation back button on Tasks page for better usability                         | Completed |
 | 25      | Profile details update functionality not working properly | Debug and fix profile update API/UI integration                                       | Completed |
@@ -25,21 +27,16 @@ These are the user stories for sprint2
 | 22      | Sign In Functionality                                     | Implement login authentication for users                                              | Completed |
 | 21      | Implement search tasks API                                | Create API to search tasks by title/description keywords                              | Completed |
 | 20      | Mark task as completed                                    | Update task status to "done" for claimed tasks                                        | Completed |
-| 19      | Fetch tasks claimed by user                               | Retrieve tasks assigned to a specific user                                            | Completed |
-| 18      | Fetch tasks created by user                               | Retrieve tasks created by a specific user                                             | Completed |
-| 17      | Implement API to fetch tasks created by a user            | Backend endpoint for user-specific task retrieval                                     | Completed |
-| 16      | Unit Testing                                              | Write and validate unit tests for all backend APIs (handlers, edge cases, validation) | Completed |
+| 19      | Fetch tasks claimed by user  (backend)                               | Retrieve tasks assigned to a specific user                                           | Completed |
+| 18      | Fetch tasks created by user (backend)                               | Retrieve tasks created by a specific user                                             | Completed |
+| 17      | Implement API to fetch tasks created by a user  (backend)          | Backend endpoint for user-specific task retrieval                                     | Completed |
+| 16      | Unit Testing (backend)                                             | Write and validate unit tests for all backend APIs (handlers, edge cases, validation) | Completed |
 | 15      | Create users table in database                            | Design and implement users table schema                                               | Completed |
 | 14      | Implement basic user authentication                       | Add login/register with password validation                                           | Completed |
 
-
-In Backend Prespective all the 6 issues are completed
-
-In Frontend Prespective all the 5 issues are completed
-=======
 In Backend Prespective all the 8 issues are completed
 
-In Frontend Prespective all the 6 issues are completed
+In Frontend , the 6 issues are completed and, 2 issues were not implemented properly.
 
 ## Frontend Unit Tests
 
