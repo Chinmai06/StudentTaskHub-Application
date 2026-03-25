@@ -32,7 +32,7 @@ These are the user stories for sprint2
 | 15      | Create users table in database                            | Design and implement users table schema                                               | Completed |
 | 14      | Implement basic user authentication                       | Add login/register with password validation                                           | Completed |
 
-<<<<<<< HEAD
+
 In Backend Prespective all the 6 issues are completed
 
 In Frontend Prespective all the 5 issues are completed
@@ -150,7 +150,7 @@ git push origin main
 cd frontend
 npm start  # Backend on :8080?
 
-# 3.2 Terminal 2: Run Cypress (SCREEN RECORD THIS)
+## 3.2 Terminal 2: Run Cypress 
 cd frontend
 npx cypress run --headed
 
