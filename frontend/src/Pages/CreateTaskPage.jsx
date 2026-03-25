@@ -1,16 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
-import { useTasks } from './context/TaskContext';
-import { isNonEmptyText } from './utils/validation';
+import { useTasks } from '../context/TaskContext';
+import { isNonEmptyText } from '../utils/validation';
 
 const initialForm = {
   title: '',
-  category: 'Study',
   description: '',
-  location: '',
-  priority: 'Medium',
-  dueDate: ''
+  deadline: '',
+  priority: false
 };
 
 function CreateTaskPage() {
@@ -22,33 +20,40 @@ function CreateTaskPage() {
   const navigate = useNavigate();
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((currentData) => ({
-      ...currentData,
-      [name]: value
+    const { name, value, type, checked } = event.target;
+    setFormData((current) => ({
+      ...current,
+      [name]: type === 'checkbox' ? checked : value
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+    setErrors({});
+    setMessage('');
 
     const nextErrors = {};
-
     if (!isNonEmptyText(formData.title)) nextErrors.title = 'Title is required.';
     if (!isNonEmptyText(formData.description)) nextErrors.description = 'Description is required.';
-    if (!isNonEmptyText(formData.location)) nextErrors.location = 'Location is required.';
-    if (!formData.dueDate) nextErrors.dueDate = 'Due date is required.';
+    if (!formData.deadline) nextErrors.deadline = 'Due date is required.';
 
     setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
 
-    if (Object.keys(nextErrors).length > 0) {
-      return;
+    try {
+      await addTask({
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        deadline: formData.deadline,
+        priority: formData.priority ? 'high' : 'normal',
+        created_by: user.username
+      });
+      setFormData(initialForm);
+      setMessage('Task created successfully.');
+      setTimeout(() => navigate('/home'), 1000);
+    } catch (err) {
+      setErrors({ form: err.message });
     }
-
-    addTask(formData, user);
-    setFormData(initialForm);
-    setMessage('Task created successfully.');
-    navigate('/home');
   };
 
   return (
@@ -68,16 +73,6 @@ function CreateTaskPage() {
         {errors.title ? <p className="error-text">{errors.title}</p> : null}
 
         <label>
-          Category
-          <select name="category" value={formData.category} onChange={handleChange}>
-            <option>Study</option>
-            <option>Project</option>
-            <option>Errand</option>
-            <option>Event</option>
-          </select>
-        </label>
-
-        <label>
           Description
           <textarea
             name="description"
@@ -89,33 +84,30 @@ function CreateTaskPage() {
         </label>
         {errors.description ? <p className="error-text">{errors.description}</p> : null}
 
-        <label>
-          Location
-          <input name="location" value={formData.location} onChange={handleChange} placeholder="Example: Reitz Union" />
-        </label>
-        {errors.location ? <p className="error-text">{errors.location}</p> : null}
-
         <div className="two-column-grid">
           <label>
-            Priority
-            <select name="priority" value={formData.priority} onChange={handleChange}>
-              <option>High</option>
-              <option>Medium</option>
-              <option>Low</option>
-            </select>
+            Due Date
+            <input type="date" name="deadline" value={formData.deadline} onChange={handleChange} />
           </label>
 
-          <label>
-            Due Date
-            <input type="date" name="dueDate" value={formData.dueDate} onChange={handleChange} />
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '1.5rem' }}>
+            <input
+              type="checkbox"
+              name="priority"
+              checked={formData.priority}
+              onChange={handleChange}
+            />
+            High Priority
           </label>
         </div>
-        {errors.dueDate ? <p className="error-text">{errors.dueDate}</p> : null}
+        {errors.deadline ? <p className="error-text">{errors.deadline}</p> : null}
+
+        {errors.form ? <p className="error-text">{errors.form}</p> : null}
+        {message ? <p className="success-text">{message}</p> : null}
 
         <button type="submit" className="primary-button">
           Create Task
         </button>
-        {message ? <p className="success-text">{message}</p> : null}
       </form>
     </section>
   );

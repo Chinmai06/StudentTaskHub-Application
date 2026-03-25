@@ -1,30 +1,16 @@
-export function createTaskPayload(formData, user) {
-  return {
-    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    title: formData.title.trim(),
-    category: formData.category.trim(),
-    description: formData.description.trim(),
-    location: formData.location.trim(),
-    priority: formData.priority,
-    dueDate: formData.dueDate,
-    createdBy: user.email,
-    creatorUfid: user.ufid,
-    createdAt: new Date().toISOString()
-  };
-}
-
-export function filterTasksCreatedBy(tasks, email) {
-  return tasks.filter((task) => task.createdBy === email);
+export function filterTasksCreatedBy(tasks, username) {
+  return tasks.filter((task) => task.created_by === username);
 }
 
 export function sortTasksByPriority(tasks) {
-  const priorityOrder = { High: 1, Medium: 2, Low: 3 };
+  const priorityOrder = { high: 1, normal: 2 };
   return [...tasks].sort(
-    (left, right) => priorityOrder[left.priority] - priorityOrder[right.priority]
+    (left, right) => (priorityOrder[left.priority] || 3) - (priorityOrder[right.priority] || 3)
   );
 }
 
 export function formatPostedDate(dateString) {
+  if (!dateString) return '';
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',

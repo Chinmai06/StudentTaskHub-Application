@@ -1,4 +1,5 @@
 import { createContext, useContext, useMemo, useState } from 'react';
+import { api } from '../utils/api';
 
 const AuthContext = createContext(null);
 const STORAGE_KEY = 'student-task-hub-user';
@@ -9,9 +10,18 @@ export function AuthProvider({ children }) {
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
-  const login = (nextUser) => {
+  const login = async (username, password) => {
+    const data = await api.login(username, password);
+    const nextUser = { username: data.username };
     setUser(nextUser);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(nextUser));
+    return data;
+  };
+
+  const register = async (username, email, password) => {
+    const data = await api.register(username, email, password);
+    if (data.error) throw new Error(data.error);
+    return data;
   };
 
   const logout = () => {
@@ -20,7 +30,7 @@ export function AuthProvider({ children }) {
   };
 
   const value = useMemo(
-    () => ({ user, login, logout, isAuthenticated: Boolean(user) }),
+    () => ({ user, login, register, logout, isAuthenticated: Boolean(user) }),
     [user]
   );
 

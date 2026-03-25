@@ -1,12 +1,21 @@
+import { useEffect, useState } from 'react';
 import TaskCard from '../components/TaskCard';
 import { useAuth } from './context/AuthContext';
-import { useTasks } from './context/TaskContext';
-import { filterTasksCreatedBy, sortTasksByPriority } from '../utils/taskHelpers';
+import { api } from '../utils/api';
 
 function HomePage() {
   const { user } = useAuth();
-  const { tasks } = useTasks();
-  const myTasks = sortTasksByPriority(filterTasksCreatedBy(tasks, user.email));
+  const [myTasks, setMyTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      api.getTasks(`?created_by=${user.username}`)
+        .then((data) => setMyTasks(data || []))
+        .catch((err) => console.error(err))
+        .finally(() => setLoading(false));
+    }
+  }, [user]);
 
   return (
     <section className="content-card">
@@ -18,7 +27,9 @@ function HomePage() {
         <span className="count-chip">{myTasks.length} task(s)</span>
       </div>
 
-      {myTasks.length === 0 ? (
+      {loading ? (
+        <p>Loading tasks...</p>
+      ) : myTasks.length === 0 ? (
         <div className="empty-state">
           <h3>No tasks yet</h3>
           <p>Create your first task to see it here.</p>
