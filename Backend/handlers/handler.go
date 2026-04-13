@@ -44,7 +44,7 @@ func getTaskByID(id int) (*models.Task, error) {
 }
 
 // ============================================================
-// User handlers (Sprint 2 - NEW)
+// User handlers (Sprint 2)
 // ============================================================
 
 // Register creates a new user account
@@ -83,6 +83,16 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		sendError(w, http.StatusConflict, "Username or email already exists")
 		return
+	}
+
+	// Sprint 3: Auto-create an empty profile for the new user
+	_, err = database.DB.Exec(
+		"INSERT INTO profiles (username) VALUES (?)",
+		req.Username,
+	)
+	if err != nil {
+		// Profile creation failed but user was created - log but don't fail
+		// Profile can be created later via PUT /api/profile
 	}
 
 	sendJSON(w, http.StatusCreated, map[string]string{
@@ -127,6 +137,85 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		Message:  "Login successful",
 		Username: req.Username,
 	})
+}
+
+// ============================================================
+// Profile handlers (Sprint 3 - NEW)
+// ============================================================
+
+// GetProfile returns a user's profile
+// GET /api/profile/{username}
+func GetProfile(w http.ResponseWriter, r *http.Request) {
+	username := mux.Vars(r)["username"]
+
+	var p models.Profile
+	err := database.DB.QueryRow(
+		`SELECT id, username, full_name, bio, major, year, skills, created_at, updated_at
+		 FROM profiles WHERE username = ?`, username,
+	).Scan(&p.ID, &p.Username, &p.FullName, &p.Bio, &p.Major, &p.Year, &p.Skills, &p.CreatedAt, &p.UpdatedAt)
+
+	if err != nil {
+		sendError(w, http.StatusNotFound, "Profile not found")
+		return
+	}
+
+	sendJSON(w, http.StatusOK, p)
+}
+
+// UpdateProfile updates a user's profile
+// PUT /api/profile/{username}
+func UpdateProfile(w http.ResponseWriter, r *http.Request) {
+	username := mux.Vars(r)["username"]
+
+	// Check who is making the request
+	reqUsername := r.URL.Query().Get("username")
+	if reqUsername == "" {
+		sendError(w, http.StatusBadRequest, "Username query parameter is required")
+		return
+	}
+	if reqUsername != username {
+		sendError(w, http.StatusForbidden, "You can only edit your own profile")
+		return
+	}
+
+	var req models.UpdateProfileRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		sendError(w, http.StatusBadRequest, "Invalid request body")
+		return
+	}
+
+	now := time.Now()
+
+	// Try to update existing profile, or insert if it doesn't exist
+	result, err := database.DB.Exec(
+		`UPDATE profiles SET full_name = ?, bio = ?, major = ?, year = ?, skills = ?, updated_at = ? WHERE username = ?`,
+		req.FullName, req.Bio, req.Major, req.Year, req.Skills, now, username,
+	)
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, "Failed to update profile")
+		return
+	}
+
+	rowsAffected, _ := result.RowsAffected()
+	if rowsAffected == 0 {
+		// Profile doesn't exist, create it
+		_, err = database.DB.Exec(
+			`INSERT INTO profiles (username, full_name, bio, major, year, skills, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+			username, req.FullName, req.Bio, req.Major, req.Year, req.Skills, now,
+		)
+		if err != nil {
+			sendError(w, http.StatusInternalServerError, "Failed to create profile")
+			return
+		}
+	}
+
+	// Return updated profile
+	var p models.Profile
+	database.DB.QueryRow(
+		`SELECT id, username, full_name, bio, major, year, skills, created_at, updated_at FROM profiles WHERE username = ?`, username,
+	).Scan(&p.ID, &p.Username, &p.FullName, &p.Bio, &p.Major, &p.Year, &p.Skills, &p.CreatedAt, &p.UpdatedAt)
+
+	sendJSON(w, http.StatusOK, p)
 }
 
 // ============================================================
@@ -326,7 +415,7 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Check who is making the request (passed as query param for Sprint 1)
+	// Check who is making the request
 	username := r.URL.Query().Get("username")
 	if username == "" {
 		sendError(w, http.StatusBadRequest, "Username query parameter is required")
@@ -405,6 +494,9 @@ func DeleteTask(w http.ResponseWriter, r *http.Request) {
 		sendError(w, http.StatusForbidden, "Only the task creator can delete this task")
 		return
 	}
+
+	// Sprint 3: Also delete related feedback when task is deleted
+	database.DB.Exec("DELETE FROM feedback WHERE task_id = ?", id)
 
 	_, err = database.DB.Exec("DELETE FROM tasks WHERE id = ?", id)
 	if err != nil {
@@ -525,4 +617,124 @@ func UpdateTaskStatus(w http.ResponseWriter, r *http.Request) {
 
 	updated, _ := getTaskByID(id)
 	sendJSON(w, http.StatusOK, updated)
+}
+
+// ============================================================
+// Feedback handlers (Sprint 3 - NEW)
+// ============================================================
+
+// AddFeedback adds a review/rating to a completed task
+// POST /api/tasks/{id}/feedback?username=xxx
+func AddFeedback(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		sendError(w, http.StatusBadRequest, "Invalid task ID")
+		return
+	}
+
+	// Verify task exists
+	task, err := getTaskByID(id)
+	if err != nil {
+		sendError(w, http.StatusNotFound, "Task not found")
+		return
+	}
+
+	// Only completed tasks can receive feedback
+	if task.Status != models.StatusDone {
+		sendError(w, http.StatusBadRequest, "Feedback can only be added to completed tasks")
+		return
+	}
+
+	username := r.URL.Query().Get("username")
+	if username == "" {
+		sendError(w, http.StatusBadRequest, "Username query parameter is required")
+		return
+	}
+
+	// Only creator or claimer can leave feedback
+	if task.CreatedBy != username && task.ClaimedBy != username {
+		sendError(w, http.StatusForbidden, "Only the task creator or claimer can leave feedback")
+		return
+	}
+
+	// Check if user already left feedback on this task
+	var feedbackExists int
+	database.DB.QueryRow("SELECT COUNT(*) FROM feedback WHERE task_id = ? AND username = ?", id, username).Scan(&feedbackExists)
+	if feedbackExists > 0 {
+		sendError(w, http.StatusConflict, "You have already submitted feedback for this task")
+		return
+	}
+
+	var req models.CreateFeedbackRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		sendError(w, http.StatusBadRequest, "Invalid request body")
+		return
+	}
+
+	// Validate rating
+	if req.Rating < 1 || req.Rating > 5 {
+		sendError(w, http.StatusBadRequest, "Rating must be between 1 and 5")
+		return
+	}
+
+	now := time.Now()
+	result, err := database.DB.Exec(
+		`INSERT INTO feedback (task_id, username, rating, comment, created_at) VALUES (?, ?, ?, ?, ?)`,
+		id, username, req.Rating, req.Comment, now,
+	)
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, "Failed to add feedback")
+		return
+	}
+
+	feedbackID, _ := result.LastInsertId()
+
+	feedback := models.Feedback{
+		ID:        int(feedbackID),
+		TaskID:    id,
+		Username:  username,
+		Rating:    req.Rating,
+		Comment:   req.Comment,
+		CreatedAt: now,
+	}
+
+	sendJSON(w, http.StatusCreated, feedback)
+}
+
+// GetFeedback returns all feedback for a task
+// GET /api/tasks/{id}/feedback
+func GetFeedback(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		sendError(w, http.StatusBadRequest, "Invalid task ID")
+		return
+	}
+
+	// Verify task exists
+	_, err = getTaskByID(id)
+	if err != nil {
+		sendError(w, http.StatusNotFound, "Task not found")
+		return
+	}
+
+	rows, err := database.DB.Query(
+		`SELECT id, task_id, username, rating, comment, created_at FROM feedback WHERE task_id = ? ORDER BY created_at DESC`, id,
+	)
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, "Failed to fetch feedback")
+		return
+	}
+	defer rows.Close()
+
+	feedbacks := []models.Feedback{}
+	for rows.Next() {
+		var f models.Feedback
+		err := rows.Scan(&f.ID, &f.TaskID, &f.Username, &f.Rating, &f.Comment, &f.CreatedAt)
+		if err != nil {
+			continue
+		}
+		feedbacks = append(feedbacks, f)
+	}
+
+	sendJSON(w, http.StatusOK, feedbacks)
 }

@@ -37,6 +37,21 @@ func createTables() {
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 	);`
 
+	// Sprint 3: Added profiles table for user profiles
+	profilesTable := `
+	CREATE TABLE IF NOT EXISTS profiles (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		username TEXT UNIQUE NOT NULL,
+		full_name TEXT DEFAULT '',
+		bio TEXT DEFAULT '',
+		major TEXT DEFAULT '',
+		year TEXT DEFAULT '',
+		skills TEXT DEFAULT '',
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY (username) REFERENCES users(username)
+	);`
+
 	tasksTable := `
 	CREATE TABLE IF NOT EXISTS tasks (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -53,13 +68,33 @@ func createTables() {
 		FOREIGN KEY (claimed_by) REFERENCES users(username)
 	);`
 
-	_, err := DB.Exec(usersTable)
-	if err != nil {
-		log.Fatal("Failed to create users table:", err)
+	// Sprint 3: Added feedback table for task reviews
+	feedbackTable := `
+	CREATE TABLE IF NOT EXISTS feedback (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		task_id INTEGER NOT NULL,
+		username TEXT NOT NULL,
+		rating INTEGER NOT NULL CHECK(rating >= 1 AND rating <= 5),
+		comment TEXT DEFAULT '',
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY (task_id) REFERENCES tasks(id),
+		FOREIGN KEY (username) REFERENCES users(username)
+	);`
+
+	tables := []struct {
+		name string
+		sql  string
+	}{
+		{"users", usersTable},
+		{"profiles", profilesTable},
+		{"tasks", tasksTable},
+		{"feedback", feedbackTable},
 	}
 
-	_, err = DB.Exec(tasksTable)
-	if err != nil {
-		log.Fatal("Failed to create tasks table:", err)
+	for _, table := range tables {
+		_, err := DB.Exec(table.sql)
+		if err != nil {
+			log.Fatalf("Failed to create %s table: %v", table.name, err)
+		}
 	}
 }

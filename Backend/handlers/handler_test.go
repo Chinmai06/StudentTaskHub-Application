@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"studenttaskhub/database"
 	"studenttaskhub/models"
 	"testing"
@@ -850,5 +851,320 @@ func TestMarkTaskAsCompleted(t *testing.T) {
 
 	if task.Status != "done" {
 		t.Errorf("Expected status 'done', got '%s'", task.Status)
+	}
+}
+
+// ============================================================
+// Sprint 3: Profile Tests
+// ============================================================
+
+func TestGetProfile_Success(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+
+	req := httptest.NewRequest("GET", "/api/profile/chinmai", nil)
+	req = mux.SetURLVars(req, map[string]string{"username": "chinmai"})
+	rr := httptest.NewRecorder()
+
+	GetProfile(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", rr.Code)
+	}
+
+	var profile models.Profile
+	json.NewDecoder(rr.Body).Decode(&profile)
+	if profile.Username != "chinmai" {
+		t.Errorf("Expected username 'chinmai', got '%s'", profile.Username)
+	}
+}
+
+func TestGetProfile_NotFound(t *testing.T) {
+	setupTestDB(t)
+
+	req := httptest.NewRequest("GET", "/api/profile/nobody", nil)
+	req = mux.SetURLVars(req, map[string]string{"username": "nobody"})
+	rr := httptest.NewRecorder()
+
+	GetProfile(rr, req)
+
+	if rr.Code != http.StatusNotFound {
+		t.Errorf("Expected status 404, got %d", rr.Code)
+	}
+}
+
+func TestUpdateProfile_Success(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+
+	body := `{"full_name":"Chinmai Reddy","bio":"CS student at UF","major":"Computer Science","year":"Senior","skills":"Go, Python, React"}`
+	req := httptest.NewRequest("PUT", "/api/profile/chinmai?username=chinmai", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	req = mux.SetURLVars(req, map[string]string{"username": "chinmai"})
+	rr := httptest.NewRecorder()
+
+	UpdateProfile(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", rr.Code)
+	}
+
+	var profile models.Profile
+	json.NewDecoder(rr.Body).Decode(&profile)
+	if profile.FullName != "Chinmai Reddy" {
+		t.Errorf("Expected full_name 'Chinmai Reddy', got '%s'", profile.FullName)
+	}
+	if profile.Major != "Computer Science" {
+		t.Errorf("Expected major 'Computer Science', got '%s'", profile.Major)
+	}
+	if profile.Skills != "Go, Python, React" {
+		t.Errorf("Expected skills 'Go, Python, React', got '%s'", profile.Skills)
+	}
+}
+
+func TestUpdateProfile_Forbidden(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
+
+	body := `{"full_name":"Hacked Name"}`
+	req := httptest.NewRequest("PUT", "/api/profile/chinmai?username=alice", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	req = mux.SetURLVars(req, map[string]string{"username": "chinmai"})
+	rr := httptest.NewRecorder()
+
+	UpdateProfile(rr, req)
+
+	if rr.Code != http.StatusForbidden {
+		t.Errorf("Expected status 403, got %d", rr.Code)
+	}
+}
+
+func TestUpdateProfile_MissingUsername(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+
+	body := `{"full_name":"Test"}`
+	req := httptest.NewRequest("PUT", "/api/profile/chinmai", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	req = mux.SetURLVars(req, map[string]string{"username": "chinmai"})
+	rr := httptest.NewRecorder()
+
+	UpdateProfile(rr, req)
+
+	if rr.Code != http.StatusBadRequest {
+		t.Errorf("Expected status 400, got %d", rr.Code)
+	}
+}
+
+// ============================================================
+// Sprint 3: Feedback Tests
+// ============================================================
+
+// helper to complete a task for feedback tests
+func completeTask(t *testing.T, taskID int, creator, claimer string) {
+	// Claim
+	claimBody := `{"claimed_by":"` + claimer + `"}`
+	claimReq := httptest.NewRequest("POST", "/api/tasks/1/claim", bytes.NewBufferString(claimBody))
+	claimReq.Header.Set("Content-Type", "application/json")
+	claimReq = mux.SetURLVars(claimReq, map[string]string{"id": strconv.Itoa(taskID)})
+	claimRR := httptest.NewRecorder()
+	ClaimTask(claimRR, claimReq)
+
+	// Mark as done
+	doneBody := `{"status":"done"}`
+	doneReq := httptest.NewRequest("PATCH", "/api/tasks/1/status?username="+claimer, bytes.NewBufferString(doneBody))
+	doneReq.Header.Set("Content-Type", "application/json")
+	doneReq = mux.SetURLVars(doneReq, map[string]string{"id": strconv.Itoa(taskID)})
+	doneRR := httptest.NewRecorder()
+	UpdateTaskStatus(doneRR, doneReq)
+}
+
+func TestAddFeedback_Success(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
+	taskID := createTestTask(t, "Test Task", "Desc", "2026-03-01", "high", "chinmai")
+	completeTask(t, taskID, "chinmai", "alice")
+
+	body := `{"rating":5,"comment":"Great work!"}`
+	req := httptest.NewRequest("POST", "/api/tasks/1/feedback?username=alice", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	req = mux.SetURLVars(req, map[string]string{"id": strconv.Itoa(taskID)})
+	rr := httptest.NewRecorder()
+
+	AddFeedback(rr, req)
+
+	if rr.Code != http.StatusCreated {
+		t.Errorf("Expected status 201, got %d", rr.Code)
+	}
+
+	var fb models.Feedback
+	json.NewDecoder(rr.Body).Decode(&fb)
+	if fb.Rating != 5 {
+		t.Errorf("Expected rating 5, got %d", fb.Rating)
+	}
+	if fb.Comment != "Great work!" {
+		t.Errorf("Expected comment 'Great work!', got '%s'", fb.Comment)
+	}
+}
+
+func TestAddFeedback_InvalidRating(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
+	taskID := createTestTask(t, "Test Task", "Desc", "2026-03-01", "high", "chinmai")
+	completeTask(t, taskID, "chinmai", "alice")
+
+	body := `{"rating":6,"comment":"Too high"}`
+	req := httptest.NewRequest("POST", "/api/tasks/1/feedback?username=alice", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	req = mux.SetURLVars(req, map[string]string{"id": strconv.Itoa(taskID)})
+	rr := httptest.NewRecorder()
+
+	AddFeedback(rr, req)
+
+	if rr.Code != http.StatusBadRequest {
+		t.Errorf("Expected status 400, got %d", rr.Code)
+	}
+}
+
+func TestAddFeedback_TaskNotDone(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+	taskID := createTestTask(t, "Open Task", "Desc", "2026-03-01", "high", "chinmai")
+
+	body := `{"rating":4,"comment":"Not done yet"}`
+	req := httptest.NewRequest("POST", "/api/tasks/1/feedback?username=chinmai", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	req = mux.SetURLVars(req, map[string]string{"id": strconv.Itoa(taskID)})
+	rr := httptest.NewRecorder()
+
+	AddFeedback(rr, req)
+
+	if rr.Code != http.StatusBadRequest {
+		t.Errorf("Expected status 400, got %d", rr.Code)
+	}
+}
+
+func TestAddFeedback_DuplicateFeedback(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
+	taskID := createTestTask(t, "Test Task", "Desc", "2026-03-01", "high", "chinmai")
+	completeTask(t, taskID, "chinmai", "alice")
+
+	// First feedback
+	body := `{"rating":5,"comment":"Great!"}`
+	req := httptest.NewRequest("POST", "/api/tasks/1/feedback?username=alice", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	req = mux.SetURLVars(req, map[string]string{"id": strconv.Itoa(taskID)})
+	rr := httptest.NewRecorder()
+	AddFeedback(rr, req)
+
+	// Duplicate feedback should fail
+	body2 := `{"rating":3,"comment":"Changed my mind"}`
+	req2 := httptest.NewRequest("POST", "/api/tasks/1/feedback?username=alice", bytes.NewBufferString(body2))
+	req2.Header.Set("Content-Type", "application/json")
+	req2 = mux.SetURLVars(req2, map[string]string{"id": strconv.Itoa(taskID)})
+	rr2 := httptest.NewRecorder()
+	AddFeedback(rr2, req2)
+
+	if rr2.Code != http.StatusConflict {
+		t.Errorf("Expected status 409, got %d", rr2.Code)
+	}
+}
+
+func TestAddFeedback_Forbidden(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
+	createTestUser(t, "bob", "bob@ufl.edu", "pass123")
+	taskID := createTestTask(t, "Test Task", "Desc", "2026-03-01", "high", "chinmai")
+	completeTask(t, taskID, "chinmai", "alice")
+
+	// Bob is not creator or claimer
+	body := `{"rating":4,"comment":"Not my task"}`
+	req := httptest.NewRequest("POST", "/api/tasks/1/feedback?username=bob", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	req = mux.SetURLVars(req, map[string]string{"id": strconv.Itoa(taskID)})
+	rr := httptest.NewRecorder()
+
+	AddFeedback(rr, req)
+
+	if rr.Code != http.StatusForbidden {
+		t.Errorf("Expected status 403, got %d", rr.Code)
+	}
+}
+
+func TestGetFeedback_Success(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
+	taskID := createTestTask(t, "Test Task", "Desc", "2026-03-01", "high", "chinmai")
+	completeTask(t, taskID, "chinmai", "alice")
+
+	// Add feedback
+	body := `{"rating":5,"comment":"Excellent!"}`
+	addReq := httptest.NewRequest("POST", "/api/tasks/1/feedback?username=alice", bytes.NewBufferString(body))
+	addReq.Header.Set("Content-Type", "application/json")
+	addReq = mux.SetURLVars(addReq, map[string]string{"id": strconv.Itoa(taskID)})
+	addRR := httptest.NewRecorder()
+	AddFeedback(addRR, addReq)
+
+	// Get feedback
+	req := httptest.NewRequest("GET", "/api/tasks/1/feedback", nil)
+	req = mux.SetURLVars(req, map[string]string{"id": strconv.Itoa(taskID)})
+	rr := httptest.NewRecorder()
+
+	GetFeedback(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", rr.Code)
+	}
+
+	var feedbacks []models.Feedback
+	json.NewDecoder(rr.Body).Decode(&feedbacks)
+	if len(feedbacks) != 1 {
+		t.Errorf("Expected 1 feedback, got %d", len(feedbacks))
+	}
+	if len(feedbacks) > 0 && feedbacks[0].Rating != 5 {
+		t.Errorf("Expected rating 5, got %d", feedbacks[0].Rating)
+	}
+}
+
+func TestGetFeedback_Empty(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+	taskID := createTestTask(t, "No Feedback Task", "Desc", "2026-03-01", "", "chinmai")
+
+	req := httptest.NewRequest("GET", "/api/tasks/1/feedback", nil)
+	req = mux.SetURLVars(req, map[string]string{"id": strconv.Itoa(taskID)})
+	rr := httptest.NewRecorder()
+
+	GetFeedback(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", rr.Code)
+	}
+
+	var feedbacks []models.Feedback
+	json.NewDecoder(rr.Body).Decode(&feedbacks)
+	if len(feedbacks) != 0 {
+		t.Errorf("Expected 0 feedbacks, got %d", len(feedbacks))
+	}
+}
+
+func TestGetFeedback_TaskNotFound(t *testing.T) {
+	setupTestDB(t)
+
+	req := httptest.NewRequest("GET", "/api/tasks/999/feedback", nil)
+	req = mux.SetURLVars(req, map[string]string{"id": "999"})
+	rr := httptest.NewRecorder()
+
+	GetFeedback(rr, req)
+
+	if rr.Code != http.StatusNotFound {
+		t.Errorf("Expected status 404, got %d", rr.Code)
 	}
 }

@@ -20,11 +20,15 @@ func main() {
 	// API routes
 	api := r.PathPrefix("/api").Subrouter()
 
-	// User routes (Sprint 2 - NEW)
+	// User routes (Sprint 2)
 	api.HandleFunc("/register", handlers.Register).Methods("POST", "OPTIONS")
 	api.HandleFunc("/login", handlers.Login).Methods("POST", "OPTIONS")
 
-	// Task routes
+	// Profile routes (Sprint 3 - NEW)
+	api.HandleFunc("/profile/{username}", handlers.GetProfile).Methods("GET")
+	api.HandleFunc("/profile/{username}", handlers.UpdateProfile).Methods("PUT", "OPTIONS")
+
+	// Task routes (Sprint 1)
 	api.HandleFunc("/tasks", handlers.CreateTask).Methods("POST", "OPTIONS")
 	api.HandleFunc("/tasks", handlers.GetTasks).Methods("GET")
 	api.HandleFunc("/tasks/{id}", handlers.GetTask).Methods("GET")
@@ -33,13 +37,24 @@ func main() {
 	api.HandleFunc("/tasks/{id}/claim", handlers.ClaimTask).Methods("POST", "OPTIONS")
 	api.HandleFunc("/tasks/{id}/status", handlers.UpdateTaskStatus).Methods("PATCH", "OPTIONS")
 
+	// Feedback routes (Sprint 3 - NEW)
+	api.HandleFunc("/tasks/{id}/feedback", handlers.AddFeedback).Methods("POST", "OPTIONS")
+	api.HandleFunc("/tasks/{id}/feedback", handlers.GetFeedback).Methods("GET")
+
 	// Apply CORS middleware
 	handler := middleware.CORS(r)
 
 	// Start server
 	port := ":8080"
 	log.Printf("StudentTaskHub API server starting on http://localhost%s", port)
-	log.Println("Available endpoints:")
+	log.Println("")
+	log.Println("=== Sprint 3 Endpoints (NEW) ===")
+	log.Println("  GET    /api/profile/{username}")
+	log.Println("  PUT    /api/profile/{username}?username=xxx")
+	log.Println("  POST   /api/tasks/{id}/feedback?username=xxx")
+	log.Println("  GET    /api/tasks/{id}/feedback")
+	log.Println("")
+	log.Println("=== Sprint 1 & 2 Endpoints ===")
 	log.Println("  POST   /api/register")
 	log.Println("  POST   /api/login")
 	log.Println("  POST   /api/tasks")
