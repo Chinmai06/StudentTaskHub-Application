@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
-<<<<<<< HEAD
-import { useAuth } from './context/AuthContext';
-=======
 import { useAuth } from '../context/AuthContext';
->>>>>>> 51dc39fbfe5540789030f329bde9653cc121e72f
 import { api } from '../utils/api';
 
 function ProfilePage() {
