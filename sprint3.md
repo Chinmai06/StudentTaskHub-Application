@@ -1,19 +1,4 @@
 ## User Stories
-
-### From Sprint 1
-1. As a student, I want to create a task with a deadline and priority so that others understand its urgency.
-2. As a student, I want to view available (open) tasks so that I can find a task to work on.
-3. As a student, I want to claim an open task so that I can take responsibility for completing it.
-4. As a student, I want to see the status of a task so that I can track its progress.
-5. As a student, I want to edit or delete a task I created so that I can manage my tasks.
-
-### From Sprint 2
-6. As a student, I want to register an account so that I can create and manage tasks securely.
-7. As a student, I want to log in to my account so that I can access the system.
-8. As a student, I want to search for tasks by keyword so that I can find specific tasks quickly.
-9. As a student, I want to filter tasks by priority, status, deadline range, and creator so that I can find relevant tasks.
-
-### New for Sprint 3
 10. As a student, I want to create and update my profile so that others can see my experience and skills.
 11. As a student, I want to view other students' profiles so that I can learn about potential collaborators.
 12. As a student, I want to leave feedback on completed tasks so that I can rate the quality of work done.
