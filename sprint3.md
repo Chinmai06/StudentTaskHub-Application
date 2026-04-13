@@ -15,11 +15,6 @@
 ### Backend - New Unit Tests
 - 13 new unit tests for profile and feedback functionality
 - Total: 47+ backend unit tests
-
-### Integration
-- Frontend-backend integration via REST API and CORS middleware
-- Frontend calls backend API for all CRUD operations
-
 ---
 
 ## Backend Unit Tests
