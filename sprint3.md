@@ -238,6 +238,7 @@ Frontend unit tests validate both Sprint 2 and Sprint 3 functionality.
 | opens correct modal data for selected category task | Verifies correct task data is loaded based on clicked category task |
 
 ---
+## Backend API Documentation
 ### URL
 
 ```url
@@ -559,7 +560,7 @@ Update the status of a task. Only the task creator or claimer can update status.
 | 403 | User is not the creator or claimer |
 | 404 | Task not found |
 
-## Backend API Documentation
+## Updated Backend API Documentation
 
 ### Base URL
 ```
