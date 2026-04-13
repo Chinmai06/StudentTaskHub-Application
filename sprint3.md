@@ -14,7 +14,7 @@
 
 ### Backend - New Unit Tests
 - 13 new unit tests for profile and feedback functionality
-- Total: 47+ backend unit tests
+- Total: 47 backend unit tests
 ---
 
 ## Backend Unit Tests
