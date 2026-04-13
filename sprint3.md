@@ -139,9 +139,6 @@ go test ./handlers/ -v
 ---
 
 ## Frontend Unit Tests
-
-## Frontend Unit Tests
-
 All frontend unit tests are located in:
 
 - `frontend/src/pages/LoginPage.test.jsx`
