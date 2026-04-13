@@ -1,28 +1,3 @@
-<<<<<<< HEAD
-These are the user stories for sprint3
-
-1) As a student, I want to search and filter tasks by keywords, status, priority, and category so that I can quickly find the tasks I am interested in.
-2) As a student, I want a “Forgot Password?” option where I can enter my email and receive a confirmation message so that I can recover my account if I forget my password.
-3) As a student, I want to click on a task and view complete details including category, description, priority, and creator information so that I can understand the task before claiming it.
-
-=======
-### Backend - New Features
-- **User Profiles**: Users can view and update their profile with full name, bio, major, year, and skills
-- **Task Feedback/Reviews**: Users can rate completed tasks (1-5 stars) and leave comments
-- **Auto-profile creation**: When a user registers, an empty profile is automatically created
-- **Cascade delete**: Deleting a task also removes all associated feedback
-- **New database tables**: Added `profiles` and `feedback` tables with foreign key constraints
-
-### Backend - New Unit Tests
-- 13 new unit tests for profile and feedback functionality
-- Total: 47+ backend unit tests
-
-### Integration
-- Frontend-backend integration via REST API and CORS middleware
-- Frontend calls backend API for all CRUD operations
-
----
-
 ## User Stories
 
 ### From Sprint 1
@@ -43,6 +18,22 @@ These are the user stories for sprint3
 11. As a student, I want to view other students' profiles so that I can learn about potential collaborators.
 12. As a student, I want to leave feedback on completed tasks so that I can rate the quality of work done.
 13. As a student, I want to see feedback on tasks so that I can evaluate task quality before claiming.
+
+---
+### Backend - New Features
+- **User Profiles**: Users can view and update their profile with full name, bio, major, year, and skills
+- **Task Feedback/Reviews**: Users can rate completed tasks (1-5 stars) and leave comments
+- **Auto-profile creation**: When a user registers, an empty profile is automatically created
+- **Cascade delete**: Deleting a task also removes all associated feedback
+- **New database tables**: Added `profiles` and `feedback` tables with foreign key constraints
+
+### Backend - New Unit Tests
+- 13 new unit tests for profile and feedback functionality
+- Total: 47+ backend unit tests
+
+### Integration
+- Frontend-backend integration via REST API and CORS middleware
+- Frontend calls backend API for all CRUD operations
 
 ---
 
