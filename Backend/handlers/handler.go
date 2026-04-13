@@ -43,10 +43,13 @@ func getTaskByID(id int) (*models.Task, error) {
 	return &t, nil
 }
 
+<<<<<<< HEAD
 // ============================================================
 // User handlers (Sprint 2)
 // ============================================================
 
+=======
+>>>>>>> b7448005 (WIP: local changes before pull)
 // Register creates a new user account
 // POST /api/register
 func Register(w http.ResponseWriter, r *http.Request) {
