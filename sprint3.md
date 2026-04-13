@@ -238,6 +238,326 @@ Frontend unit tests validate both Sprint 2 and Sprint 3 functionality.
 | opens correct modal data for selected category task | Verifies correct task data is loaded based on clicked category task |
 
 ---
+### URL
+
+```url
+http://localhost:8080/api
+```
+
+### How to Run
+
+```bash
+# Delete old database (schema changed from Sprint 1)
+del studenttaskhub.db
+
+# Install dependencies
+go mod tidy
+
+# Start the server
+go run main.go
+
+# Run unit tests (separate terminal)
+go test ./handlers/ -v
+```
+
+---
+
+### User Endpoints
+
+#### POST /api/register
+
+Register a new user account.
+
+**Request Body:**
+
+```json
+{
+    "username": "",
+    "email": "chinmai@ufl.edu",
+    "password": "pass123"
+}
+```
+
+**Success Response (201):**
+
+```json
+{
+    "message": "User registered successfully",
+    "username": "Chinmai"
+}
+```
+
+**Error Responses:**
+
+| Status | Reason |
+|--------|--------|
+| 400 | Missing fields (username, email, or password) |
+| 400 | Password shorter than 6 characters |
+| 409 | Username or email already exists |
+
+---
+
+#### POST /api/login
+
+Authenticate a user.
+
+**Request Body:**
+
+```json
+{
+    "username": "Chinmai",
+    "password": "pass123"
+}
+```
+
+**Success Response (200):**
+
+```json
+{
+    "message": "Login successful",
+    "username": "Chinmai"
+}
+```
+
+**Error Responses:**
+
+| Status | Reason |
+|--------|--------|
+| 400 | Missing username or password |
+| 401 | Invalid username or password |
+
+---
+
+### Task Endpoints
+
+#### POST /api/tasks
+
+Create a new task. The `created_by` user must be registered.
+
+**Request Body:**
+
+```json
+{
+    "title": "ML Assignment 3",
+    "description": "Neural network implementation",
+    "deadline": "2026-03-01",
+    "priority": "high",
+    "created_by": "Chinmai"
+}
+```
+
+**Success Response (201):**
+
+```json
+{
+    "id": 1,
+    "title": "ML Assignment 3",
+    "description": "Neural network implementation",
+    "deadline": "2026-03-01",
+    "priority": "high",
+    "status": "open",
+    "created_by": "Chinmai",
+    "created_at": "2026-02-13T12:00:00Z",
+    "updated_at": "2026-02-13T12:00:00Z"
+}
+```
+
+**Error Responses:**
+
+| Status | Reason |
+|--------|--------|
+| 400 | Missing title, deadline, or created_by |
+| 400 | Invalid deadline format (must be YYYY-MM-DD) |
+| 400 | User does not exist (not registered) |
+
+---
+
+#### GET /api/tasks
+
+`http://localhost:8080/api/tasks`
+
+Retrieve all tasks with optional filtering, searching, and sorting.
+
+**Query Parameters:**
+
+| Parameter | Description | Example |
+|-----------|--------------|---------|
+| status | Filter by task status | ?status=open |
+| priority |  Filter by priority | ?priority=high |
+| created_by | Filter by creator | ?created_by=Chinmai |
+| claimed_by | Filter by claimer | ?claimed_by=Alice |
+| search | Search title and description (case-insensitive) | ?search=ML |
+| deadline_before | Tasks due on or before date (YYYY-MM-DD) | ?deadline_before=2026-04-01 |
+| deadline_after |  Tasks due on or after date (YYYY-MM-DD) | ?deadline_after=2026-03-01 |
+| sort | Sort order: deadline, priority, newest, oldest | ?sort=deadline |
+
+All parameters can be combined: `?status=open&priority=high&sort=deadline&search=ML`
+
+**Success Response (200):**
+
+```json
+[
+    {
+        "id": 1,
+        "title": "ML Assignment 3",
+        "description": "Neural network implementation",
+        "deadline": "2026-03-01",
+        "priority": "high",
+        "status": "open",
+        "created_by": "Chinmai",
+        "created_at": "2026-02-13T12:00:00Z",
+        "updated_at": "2026-02-13T12:00:00Z"
+    }
+]
+```
+
+---
+
+#### GET /api/tasks/{id}
+
+Retrieve a single task by its ID.
+
+**Example:** `http://localhost:8080/api/tasks/1`
+
+**Success Response (200):** Single task object
+
+```json
+{
+    "id": 2,
+    "title": "Fix login bug",
+    "description": "Frontend issue",
+    "deadline": "2025-12-31",
+    "priority": "high",
+    "status": "open",
+    "created_by": "john",
+    "created_at": "2026-03-22T03:37:20.738224-05:00",
+    "updated_at": "2026-03-22T03:37:20.738224-05:00"
+}
+```
+
+**Error Responses:**
+
+| Status | Reason |
+|--------|--------|
+| 400 | Invalid task ID |
+| 404 | Task not found |
+
+---
+
+#### PUT /api/tasks/{id}?username=xxx
+
+Update a task. Only the task creator can edit.
+
+**Example:** `http://localhost:8080/api/tasks/2?username=john`
+
+**Request Body (all fields optional unchanged fields keep their values):**
+
+```json
+{
+    "title": "Updated Title",
+    "description": "Updated description",
+    "deadline": "2026-04-01",
+    "priority": "normal"
+}
+```
+
+**Success Response (200):** Updated task object
+
+**Error Responses:**
+
+| Status | Reason |
+|--------|--------|
+| 400 | Missing username query parameter |
+| 400 | Invalid priority or deadline format |
+| 403 | User is not the task creator |
+| 404 | Task not found |
+
+---
+
+#### DELETE /api/tasks/{id}?username=xxx
+
+Delete a task. Only the task creator can delete.
+
+**Example:** `http://localhost:8080/api/tasks/1?username=Chinmai`
+
+**Success Response (200):**
+
+```json
+{
+    "message": "Task deleted successfully"
+}
+```
+
+**Error Responses:**
+
+| Status | Reason |
+|--------|--------|
+| 400 | Missing username query parameter |
+| 403 | User is not the task creator |
+| 404 | Task not found |
+
+---
+
+#### POST /api/tasks/{id}/claim
+
+Claim an open task. Only tasks with status "open" can be claimed. The `claimed_by` user must be registered.
+
+**Example:** `http://localhost:8080/api/tasks/1/claim`
+
+**Request Body:**
+
+```json
+{
+    "claimed_by": "jhon"
+}
+```
+
+**Success Response (200):** Updated task object with status "claimed"
+
+**Error Responses:**
+
+| Status | Reason |
+|--------|--------|
+| 400 | Missing claimed_by |
+| 400 | User does not exist (not registered) |
+| 404 | Task not found |
+| 409 | Task is not open for claiming (already claimed) |
+
+---
+
+#### PATCH /api/tasks/{id}/status?username=xxx
+
+Update the status of a task. Only the task creator or claimer can update status.
+
+**Example:** `http://localhost:8080/api/tasks/1/status?username=Alice`
+
+**Request Body:**
+
+```json
+{
+    "status": "in_progress"
+}
+```
+
+**Valid Status Values:**
+
+| Status | Description |
+|--------|-------------|
+| open | Task is available for claiming |
+| claimed | Task has been claimed by a user |
+| in_progress | Task is being worked on |
+| done | Task is completed |
+
+**Success Response (200):** Updated task object
+
+**Error Responses:**
+
+| Status | Reason |
+|--------|--------|
+| 400 | Missing username query parameter |
+| 400 | Invalid status value |
+| 403 | User is not the creator or claimer |
+| 404 | Task not found |
 
 ## Backend API Documentation
 
