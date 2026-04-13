@@ -39,20 +39,27 @@ function TaskCard({ task }) {
           <span className={`status-badge status-${task.status}`}>{task.status}</span>
           <h3>{task.title}</h3>
         </div>
-        {task.priority === 'high' ? (
-          <span className="priority-badge priority-high">High Priority</span>
-        ) : null}
+        <span className={`priority-badge priority-${task.priority.toLowerCase()}`}>
+          {task.priority}
+        </span>
       </div>
+
+      {task.category ? (
+        <span className="task-category">{task.category}</span>
+      ) : null}
 
       <p className="task-description">{task.description}</p>
 
       <div className="task-meta-grid">
+        {task.location ? (
+          <span><strong>Location:</strong> {task.location}</span>
+        ) : null}
         <span><strong>Deadline:</strong> {task.deadline}</span>
         <span><strong>Created by:</strong> {task.created_by}</span>
         {task.claimed_by ? (
           <span><strong>Claimed by:</strong> {task.claimed_by}</span>
         ) : null}
-        <span><strong>Created:</strong> {formatDate(task.created_at)}</span>
+        <span><strong>Posted:</strong> {formatDate(task.created_at)}</span>
       </div>
 
       <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.75rem', flexWrap: 'wrap' }}>

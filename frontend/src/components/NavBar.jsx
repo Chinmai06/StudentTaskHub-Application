@@ -1,9 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
-import { useAuth } from './context/AuthContext';
-=======
 import { useAuth } from '../context/AuthContext';
->>>>>>> 51dc39fbfe5540789030f329bde9653cc121e72f
 
 function NavBar() {
   const { user, logout } = useAuth();
@@ -27,7 +23,7 @@ function NavBar() {
         <NavLink to="/profile">Profile</NavLink>
       </nav>
       <div className="user-chip-wrap">
-        <span className="user-chip">Signed in: {user?.email}</span>
+        <span className="user-chip">Signed in as {user?.username}</span>
         <button className="secondary-button" onClick={handleLogout}>
           Logout
         </button>

@@ -17,7 +17,6 @@ func InitDB(filepath string) {
 		log.Fatal("Failed to open database:", err)
 	}
 
-	// Test the connection
 	if err = DB.Ping(); err != nil {
 		log.Fatal("Failed to ping database:", err)
 	}
@@ -27,17 +26,16 @@ func InitDB(filepath string) {
 }
 
 func createTables() {
-	// Sprint 2: Added users table for registration and login
 	usersTable := `
 	CREATE TABLE IF NOT EXISTS users (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		username TEXT UNIQUE NOT NULL,
 		email TEXT UNIQUE NOT NULL,
+		ufid TEXT DEFAULT '',
 		password TEXT NOT NULL,
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 	);`
 
-	// Sprint 3: Added profiles table for user profiles
 	profilesTable := `
 	CREATE TABLE IF NOT EXISTS profiles (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -56,9 +54,11 @@ func createTables() {
 	CREATE TABLE IF NOT EXISTS tasks (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		title TEXT NOT NULL,
+		category TEXT DEFAULT '',
 		description TEXT DEFAULT '',
+		location TEXT DEFAULT '',
+		priority TEXT NOT NULL DEFAULT 'Medium' CHECK(priority IN ('High', 'Medium', 'Low')),
 		deadline TEXT NOT NULL,
-		priority TEXT NOT NULL DEFAULT 'normal' CHECK(priority IN ('high', 'normal')),
 		status TEXT NOT NULL DEFAULT 'open' CHECK(status IN ('open', 'claimed', 'in_progress', 'done')),
 		created_by TEXT NOT NULL,
 		claimed_by TEXT DEFAULT '',
@@ -68,7 +68,6 @@ func createTables() {
 		FOREIGN KEY (claimed_by) REFERENCES users(username)
 	);`
 
-	// Sprint 3: Added feedback table for task reviews
 	feedbackTable := `
 	CREATE TABLE IF NOT EXISTS feedback (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,

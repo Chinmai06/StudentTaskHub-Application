@@ -6,9 +6,11 @@ import { isNonEmptyText } from '../utils/validation';
 
 const initialForm = {
   title: '',
+  category: 'Study',
   description: '',
-  deadline: '',
-  priority: false
+  location: '',
+  priority: 'Medium',
+  deadline: ''
 };
 
 function CreateTaskPage() {
@@ -20,10 +22,10 @@ function CreateTaskPage() {
   const navigate = useNavigate();
 
   const handleChange = (event) => {
-    const { name, value, type, checked } = event.target;
+    const { name, value } = event.target;
     setFormData((current) => ({
       ...current,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value
     }));
   };
 
@@ -35,6 +37,7 @@ function CreateTaskPage() {
     const nextErrors = {};
     if (!isNonEmptyText(formData.title)) nextErrors.title = 'Title is required.';
     if (!isNonEmptyText(formData.description)) nextErrors.description = 'Description is required.';
+    if (!isNonEmptyText(formData.location)) nextErrors.location = 'Location is required.';
     if (!formData.deadline) nextErrors.deadline = 'Due date is required.';
 
     setErrors(nextErrors);
@@ -43,9 +46,11 @@ function CreateTaskPage() {
     try {
       await addTask({
         title: formData.title.trim(),
+        category: formData.category,
         description: formData.description.trim(),
+        location: formData.location.trim(),
+        priority: formData.priority,
         deadline: formData.deadline,
-        priority: formData.priority ? 'high' : 'normal',
         created_by: user.username
       });
       setFormData(initialForm);
@@ -73,6 +78,16 @@ function CreateTaskPage() {
         {errors.title ? <p className="error-text">{errors.title}</p> : null}
 
         <label>
+          Category
+          <select name="category" value={formData.category} onChange={handleChange}>
+            <option>Study</option>
+            <option>Project</option>
+            <option>Errand</option>
+            <option>Event</option>
+          </select>
+        </label>
+
+        <label>
           Description
           <textarea
             name="description"
@@ -84,20 +99,25 @@ function CreateTaskPage() {
         </label>
         {errors.description ? <p className="error-text">{errors.description}</p> : null}
 
+        <label>
+          Location
+          <input name="location" value={formData.location} onChange={handleChange} placeholder="Example: Reitz Union" />
+        </label>
+        {errors.location ? <p className="error-text">{errors.location}</p> : null}
+
         <div className="two-column-grid">
+          <label>
+            Priority
+            <select name="priority" value={formData.priority} onChange={handleChange}>
+              <option>High</option>
+              <option>Medium</option>
+              <option>Low</option>
+            </select>
+          </label>
+
           <label>
             Due Date
             <input type="date" name="deadline" value={formData.deadline} onChange={handleChange} />
-          </label>
-
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '1.5rem' }}>
-            <input
-              type="checkbox"
-              name="priority"
-              checked={formData.priority}
-              onChange={handleChange}
-            />
-            High Priority
           </label>
         </div>
         {errors.deadline ? <p className="error-text">{errors.deadline}</p> : null}

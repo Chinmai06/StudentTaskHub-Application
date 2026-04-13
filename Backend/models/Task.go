@@ -2,10 +2,11 @@ package models
 
 import "time"
 
-// Task priority levels
+// Task priority levels (matching frontend)
 const (
-	PriorityHigh   = "high"
-	PriorityNormal = "normal"
+	PriorityHigh   = "High"
+	PriorityMedium = "Medium"
+	PriorityLow    = "Low"
 )
 
 // Task status values
@@ -20,12 +21,14 @@ const (
 type Task struct {
 	ID          int       `json:"id"`
 	Title       string    `json:"title"`
+	Category    string    `json:"category"`
 	Description string    `json:"description"`
-	Deadline    string    `json:"deadline"`             // format: "2025-12-31"
-	Priority    string    `json:"priority"`             // high or normal
-	Status      string    `json:"status"`               // open, claimed, in_progress, done
-	CreatedBy   string    `json:"created_by"`           // username of the creator
-	ClaimedBy   string    `json:"claimed_by,omitempty"` // username of who claimed it
+	Location    string    `json:"location"`
+	Priority    string    `json:"priority"`
+	Deadline    string    `json:"deadline"`
+	Status      string    `json:"status"`
+	CreatedBy   string    `json:"created_by"`
+	ClaimedBy   string    `json:"claimed_by,omitempty"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
@@ -33,18 +36,22 @@ type Task struct {
 // CreateTaskRequest is the JSON body for creating a task
 type CreateTaskRequest struct {
 	Title       string `json:"title"`
+	Category    string `json:"category"`
 	Description string `json:"description"`
+	Location    string `json:"location"`
+	Priority    string `json:"priority"`
 	Deadline    string `json:"deadline"`
-	Priority    string `json:"priority"` // "high" if selected, otherwise defaults to "normal"
 	CreatedBy   string `json:"created_by"`
 }
 
 // UpdateTaskRequest is the JSON body for editing a task
 type UpdateTaskRequest struct {
 	Title       string `json:"title"`
+	Category    string `json:"category"`
 	Description string `json:"description"`
-	Deadline    string `json:"deadline"`
+	Location    string `json:"location"`
 	Priority    string `json:"priority"`
+	Deadline    string `json:"deadline"`
 }
 
 // ClaimTaskRequest is the JSON body for claiming a task

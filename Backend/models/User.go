@@ -7,6 +7,7 @@ type User struct {
 	ID        int       `json:"id"`
 	Username  string    `json:"username"`
 	Email     string    `json:"email"`
+	UFID      string    `json:"ufid"`
 	Password  string    `json:"-"` // never sent in JSON responses
 	CreatedAt time.Time `json:"created_at"`
 }
@@ -15,6 +16,7 @@ type User struct {
 type RegisterRequest struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
+	UFID     string `json:"ufid"`
 	Password string `json:"password"`
 }
 
@@ -28,4 +30,6 @@ type LoginRequest struct {
 type LoginResponse struct {
 	Message  string `json:"message"`
 	Username string `json:"username"`
+	Email    string `json:"email"`
+	UFID     string `json:"ufid"`
 }

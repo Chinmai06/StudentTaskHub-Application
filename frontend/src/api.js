@@ -1,19 +1,119 @@
-const API_BASE = 'http://localhost:8080/api';
+const API_URL = "http://localhost:8080/api";
 
-export async function apiRequest(path, options = {}) {
-  const response = await fetch(`${API_BASE}${path}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(options.headers || {})
-    },
-    ...options
-  });
+export const api = {
+  // ============ User Endpoints ============
 
-  const data = await response.json().catch(() => ({}));
+  async register(username, email, password) {
+    const res = await fetch(`${API_URL}/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, password }),
+    });
+    return await res.json();
+  },
 
-  if (!response.ok) {
-    throw new Error(data.error || data.message || 'Something went wrong');
-  }
+  async login(username, password) {
+    const res = await fetch(`${API_URL}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Login failed");
+    return data;
+  },
 
-  return data;
-}
+  // ============ Profile Endpoints (Sprint 3) ============
+
+  async getProfile(username) {
+    const res = await fetch(`${API_URL}/profile/${username}`);
+    return await res.json();
+  },
+
+  async updateProfile(username, profileData) {
+    const res = await fetch(`${API_URL}/profile/${username}?username=${username}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(profileData),
+    });
+    return await res.json();
+  },
+
+  // ============ Task Endpoints ============
+
+  async getTasks(filters = "") {
+    const res = await fetch(`${API_URL}/tasks${filters}`);
+    return await res.json();
+  },
+
+  async getTask(id) {
+    const res = await fetch(`${API_URL}/tasks/${id}`);
+    return await res.json();
+  },
+
+  async createTask(taskData) {
+    const res = await fetch(`${API_URL}/tasks`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(taskData),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to create task");
+    return data;
+  },
+
+  async updateTask(id, username, taskData) {
+    const res = await fetch(`${API_URL}/tasks/${id}?username=${username}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(taskData),
+    });
+    return await res.json();
+  },
+
+  async deleteTask(id, username) {
+    const res = await fetch(`${API_URL}/tasks/${id}?username=${username}`, {
+      method: "DELETE",
+    });
+    return await res.json();
+  },
+
+  async claimTask(id, username) {
+    const res = await fetch(`${API_URL}/tasks/${id}/claim`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ claimed_by: username }),
+    });
+    return await res.json();
+  },
+
+  async updateTaskStatus(id, username, status) {
+    const res = await fetch(`${API_URL}/tasks/${id}/status?username=${username}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
+    return await res.json();
+  },
+
+  async searchTasks(keyword) {
+    const res = await fetch(`${API_URL}/tasks?search=${keyword}`);
+    return await res.json();
+  },
+
+  // ============ Feedback Endpoints (Sprint 3) ============
+
+  async addFeedback(taskId, username, rating, comment) {
+    const res = await fetch(`${API_URL}/tasks/${taskId}/feedback?username=${username}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ rating, comment }),
+    });
+    return await res.json();
+  },
+
+  async getFeedback(taskId) {
+    const res = await fetch(`${API_URL}/tasks/${taskId}/feedback`);
+    return await res.json();
+  },
+};
