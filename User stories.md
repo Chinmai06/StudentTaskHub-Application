@@ -1,5 +1,4 @@
 # User stories Sprint 1
-
 1. As a student, I want to create a task with a deadline and priority so that others understand its urgency
 2. As a student, I want to edit my tasks so that I can fix mistakes or update them when needed.
 3. As a student, I want to mark myself as the owner of a task so that everyone clearly knows I am responsible for completing it and tracking its progress.
@@ -17,3 +16,8 @@
 8. As a student, I want to update my profile details successfully so that my personal information stays accurate and up to date.
 9. As a student, I want a back button on the Tasks page so that I can easily navigate to the previous page without confusion.
 10. As a student, I want the logout button to be clearly visible and properly placed so that I can securely log out of my account when needed.
+
+# User stories Sprint 3
+1. As a student, I want to search and filter tasks by keywords, status, priority, and category so that I can quickly find the tasks I am interested in.
+2. As a student, I want a “Forgot Password?” option where I can enter my email and receive a confirmation message so that I can recover my account if I forget my password.
+3. As a student, I want to click on a task and view complete details including category, description, priority, and creator information so that I can understand the task before claiming it.
