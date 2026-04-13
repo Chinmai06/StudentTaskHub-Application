@@ -7,13 +7,15 @@
 ---
 | Issue # | Title | Description | Status |
 |--------|------|-------------|--------|
-| 34 | Implement filter by due date | Allow filtering tasks based on due date | To Do |
-| 33 | Implement filter by task status | Add backend support to filter tasks by completion status | To Do |
-| 32 | Implement filter by task type (backend) | Add backend support to filter tasks by task type | To Do |
-| 31 | Fix the Forgot Password Support on Login Page | Add "Forgot Password" option with modal email input and confirmation message | To Do |
-| 30 | Add search and filter functionality to View Tasks page | Add search toolbar with filtering by status, priority, and category | To Do |
-| 29 | issue with implementation of search task functionality | Fix search functionality not working as expected | In Progress |
-| 28 | issue with implementation of claim functionality | Fix claim functionality not working as expected | In Progress |
+| 36 | Update Profile API | Implement backend API to update user profile information | Completed |
+| 35 | Implement feedback feature | Add backend APIs for task feedback and ratings | Completed |
+| 34 | Implement filter by due date | Allow filtering tasks based on due date | Completed |
+| 33 | Implement filter by task status | Add backend support to filter tasks by completion status | Completed |
+| 32 | Implement filter by task type (backend) | Add backend support to filter tasks by task type | Completed |
+| 31 | Fix the Forgot Password Support on Login Page | Add "Forgot Password" option with modal email input and confirmation message | In Progress |
+| 30 | Add search and filter functionality to View Tasks page | Add search toolbar with filtering by status, priority, and category | Completed |
+| 29 | issue with implementation of search task functionality | Fix search functionality not working as expected | Completed |
+| 28 | issue with implementation of claim functionality | Fix claim functionality not working as expected | Completed |
 
 ### Backend - New Features
 - **User Profiles**: Users can view and update their profile with full name, bio, major, year, and skills
