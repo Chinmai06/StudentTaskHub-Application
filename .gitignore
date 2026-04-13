@@ -1,0 +1,16 @@
+# Dependencies
+frontend/node_modules/
+
+# Mac system files
+.DS_Store
+__MACOSX
+
+# Build output
+frontend/dist/
+
+# Database (optional - remove this line if you want to keep it)
+backend/studenttaskhub.db
+backend/handlers/test.db
+
+# Environment files
+.env
