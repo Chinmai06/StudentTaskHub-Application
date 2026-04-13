@@ -5,6 +5,16 @@
 13. As a student, I want to see feedback on tasks so that I can evaluate task quality before claiming.
 
 ---
+| Issue # | Title | Description | Status |
+|--------|------|-------------|--------|
+| 34 | Implement filter by due date | Allow filtering tasks based on due date | To Do |
+| 33 | Implement filter by task status | Add backend support to filter tasks by completion status | To Do |
+| 32 | Implement filter by task type (backend) | Add backend support to filter tasks by task type | To Do |
+| 31 | Fix the Forgot Password Support on Login Page | Add "Forgot Password" option with modal email input and confirmation message | To Do |
+| 30 | Add search and filter functionality to View Tasks page | Add search toolbar with filtering by status, priority, and category | To Do |
+| 29 | issue with implementation of search task functionality | Fix search functionality not working as expected | In Progress |
+| 28 | issue with implementation of claim functionality | Fix claim functionality not working as expected | In Progress |
+
 ### Backend - New Features
 - **User Profiles**: Users can view and update their profile with full name, bio, major, year, and skills
 - **Task Feedback/Reviews**: Users can rate completed tasks (1-5 stars) and leave comments
