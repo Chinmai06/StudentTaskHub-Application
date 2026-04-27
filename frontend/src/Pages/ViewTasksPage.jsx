@@ -1,5 +1,7 @@
+// frontend/src/Pages/ViewTasksPage.jsx
 import { useState } from 'react';
 import TaskCard from '../components/TaskCard';
+import SearchBar from '../components/SearchBar';
 import { useTasks } from '../context/TaskContext';
 
 function ViewTasksPage() {
@@ -36,45 +38,18 @@ function ViewTasksPage() {
         <span className="count-chip">{tasks.length} total</span>
       </div>
 
-      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
-        <input
-          type="text"
-          placeholder="Search tasks..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') handleFilter(); }}
-          style={{ padding: '0.5rem', borderRadius: '6px', border: '1px solid #ccc', flex: '1', minWidth: '150px' }}
-        />
-        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
-          style={{ padding: '0.5rem', borderRadius: '6px', border: '1px solid #ccc' }}>
-          <option value="">All Status</option>
-          <option value="open">Open</option>
-          <option value="claimed">Claimed</option>
-          <option value="in_progress">In Progress</option>
-          <option value="done">Done</option>
-        </select>
-        <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)}
-          style={{ padding: '0.5rem', borderRadius: '6px', border: '1px solid #ccc' }}>
-          <option value="">All Priority</option>
-          <option value="high">High</option>
-          <option value="normal">Normal</option>
-        </select>
-        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}
-          style={{ padding: '0.5rem', borderRadius: '6px', border: '1px solid #ccc' }}>
-          <option value="">Default Sort</option>
-          <option value="deadline">By Deadline</option>
-          <option value="priority">By Priority</option>
-          <option value="newest">Newest First</option>
-          <option value="oldest">Oldest First</option>
-        </select>
-        <button onClick={handleFilter} className="primary-button" style={{ padding: '0.5rem 1rem' }}>
-          Filter
-        </button>
-        <button onClick={handleClearFilters}
-          style={{ padding: '0.5rem 1rem', background: '#6b7280', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>
-          Clear
-        </button>
-      </div>
+      <SearchBar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+        priorityFilter={priorityFilter}
+        setPriorityFilter={setPriorityFilter}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        onFilter={handleFilter}
+        onClear={handleClearFilters}
+      />
 
       {loading ? (
         <p>Loading tasks...</p>
