@@ -842,6 +842,299 @@
       .full-page-shell { width: min(100vw - 24px, 1380px); }
     }
 
+
+    /* Compact screen + task status/claim updates */
+    .full-page-shell {
+      width: min(1460px, calc(100vw - 32px));
+      padding: 14px 0 22px;
+      gap: 12px;
+    }
+    .page-nav-wrap .site-nav-bar {
+      width: min(1320px, 100%);
+      padding: 8px 16px;
+      border-radius: 0 0 26px 26px;
+    }
+    .site-nav-link, .nav-menu-btn.site-nav-link {
+      padding: 12px 20px;
+      font-size: 0.92rem;
+      border-radius: 14px;
+    }
+    .content-surface {
+      border-radius: 24px;
+      padding: 18px 26px;
+    }
+    .home-header, .task-header, .view-header, .profile-header {
+      margin-bottom: 14px;
+    }
+    .home-header h2, .task-header h2, .view-header h2, .profile-header h2 {
+      font-size: clamp(1.9rem, 3.2vw, 2.75rem);
+      line-height: 1;
+    }
+    .home-header p, .task-header p, .view-header p, .profile-header p {
+      font-size: 0.92rem;
+    }
+    .task-user-actions.compact-actions .signed-pill {
+      padding: 11px 18px;
+      font-size: 0.88rem;
+      border-radius: 20px;
+    }
+    .task-user-actions.compact-actions .task-top-btn {
+      min-width: 110px;
+      padding: 11px 18px;
+      border-radius: 16px;
+      font-size: 0.9rem;
+    }
+    .task-form-card {
+      border-radius: 24px;
+      padding: 18px 24px;
+    }
+    .task-form-card h3 {
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      margin-bottom: 4px;
+    }
+    .task-form-card .intro-copy {
+      font-size: 0.92rem;
+      margin-bottom: 12px;
+    }
+    .field label, .task-form .field label {
+      font-size: 0.92rem;
+      margin-bottom: 6px;
+    }
+    .field input, .field select, .field textarea {
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 0.92rem;
+    }
+    textarea, .task-form textarea {
+      min-height: 108px;
+    }
+    .task-form .field-grid.split {
+      gap: 12px;
+    }
+    .task-toggle-row {
+      padding: 16px 18px;
+      border-radius: 18px;
+      margin-top: 4px;
+    }
+    .actions-row {
+      margin-top: 12px;
+    }
+    .primary-btn, .secondary-btn {
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-size: 0.92rem;
+    }
+    .tasks-table {
+      table-layout: fixed;
+    }
+    .tasks-table th, .tasks-table td {
+      padding: 12px 10px;
+      font-size: 0.82rem;
+      vertical-align: middle;
+    }
+    .tasks-table th { font-size: 0.76rem; }
+    .tasks-table th:nth-child(1), .tasks-table td:nth-child(1) { width: 18%; }
+    .tasks-table th:nth-child(2), .tasks-table td:nth-child(2) { width: 16%; }
+    .tasks-table th:nth-child(3), .tasks-table td:nth-child(3) { width: 10%; }
+    .tasks-table th:nth-child(4), .tasks-table td:nth-child(4) { width: 9%; }
+    .tasks-table th:nth-child(5), .tasks-table td:nth-child(5) { width: 9%; }
+    .tasks-table th:nth-child(6), .tasks-table td:nth-child(6) { width: 24%; }
+    .tasks-table th:nth-child(7), .tasks-table td:nth-child(7) { width: 7%; }
+    .tasks-table th:nth-child(8), .tasks-table td:nth-child(8) { width: 7%; }
+    .pill { padding: 6px 11px; font-size: 0.76rem; }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 800;
+      font-size: 0.78rem;
+      border: 0;
+      white-space: nowrap;
+    }
+    .status-badge.claimed { background: #e8f3ff; color: #3d6c9e; }
+    .status-badge.unclaimed { background: #fff0d8; color: #a66f27; }
+    .claim-row-btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: #4c2f91;
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+    .claim-row-btn:disabled {
+      background: #e6e6f1;
+      color: #777f99;
+      cursor: not-allowed;
+    }
+    .task-title-btn {
+      font-size: 0.86rem;
+      line-height: 1.25;
+    }
+    .priority-note-line { margin-top: 6px; }
+
+
+    /* Profile header, footer and View Tasks search updates */
+    .task-search-row { margin: 8px 0 18px; }
+    .task-search-row input {
+      width: 100%; border: 1.5px solid var(--line); border-radius: 18px;
+      padding: 14px 18px; font-family: 'Poppins', sans-serif; font-size: 0.95rem;
+      color: var(--ink); background: rgba(255,255,255,0.92); outline: none;
+    }
+    .task-search-row input:focus { border-color: #8a75c9; box-shadow: 0 0 0 4px rgba(76,47,145,0.10); }
+
+    .task-filter-row {
+      display: grid;
+      grid-template-columns: 1.5fr repeat(3, minmax(150px, 0.6fr));
+      gap: 12px;
+      align-items: center;
+      margin: 8px 0 18px;
+    }
+    .task-filter-row input, .task-filter-row select {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.88rem;
+      color: var(--ink);
+      background: rgba(255,255,255,0.94);
+      outline: none;
+    }
+    .task-filter-row input:focus, .task-filter-row select:focus {
+      border-color: #8a75c9;
+      box-shadow: 0 0 0 4px rgba(76,47,145,0.10);
+    }
+    @media (max-width: 900px) {
+      .task-filter-row { grid-template-columns: 1fr; }
+    }
+    .profile-hero { min-height: 100%; display: flex; flex-direction: column; }
+
+  
+    /* Final spacing fixes requested: remove top empty space and narrow main white panels */
+    #homeScreen.app-screen,
+    #taskScreen.app-screen,
+    #projectsScreen.app-screen,
+    #profileScreen.app-screen {
+      align-items: flex-start;
+      justify-content: center;
+      padding: 0 14px 20px;
+      min-height: 100vh;
+    }
+
+    #homeScreen .full-page-shell,
+    #taskScreen .full-page-shell,
+    #projectsScreen .full-page-shell,
+    #profileScreen .full-page-shell {
+      width: min(1280px, calc(100vw - 56px));
+      padding-top: 10px;
+      gap: 14px;
+      min-height: auto;
+    }
+
+    #homeScreen .page-nav-wrap .site-nav-bar,
+    #taskScreen .page-nav-wrap .site-nav-bar,
+    #projectsScreen .page-nav-wrap .site-nav-bar,
+    #profileScreen .page-nav-wrap .site-nav-bar {
+      width: 100%;
+    }
+
+    @media (max-width: 900px) {
+      #homeScreen.app-screen,
+      #taskScreen.app-screen,
+      #projectsScreen.app-screen,
+      #profileScreen.app-screen {
+        padding: 0 10px 18px;
+      }
+      #homeScreen .full-page-shell,
+      #taskScreen .full-page-shell,
+      #projectsScreen .full-page-shell,
+      #profileScreen .full-page-shell {
+        width: min(100vw - 20px, 1280px);
+        padding-top: 8px;
+      }
+    }
+
+
+
+    /* Final requested sizing: narrower white content box on all main pages */
+    #homeScreen .full-page-shell,
+    #taskScreen .full-page-shell,
+    #projectsScreen .full-page-shell,
+    #profileScreen .full-page-shell {
+      width: min(1180px, calc(100vw - 64px));
+    }
+    #homeScreen .content-surface,
+    #taskScreen .content-surface,
+    #projectsScreen .content-surface,
+    #profileScreen .content-surface {
+      width: min(1120px, 100%);
+      margin-left: auto;
+      margin-right: auto;
+      flex: 0 1 auto;
+    }
+    #homeScreen .page-nav-wrap .site-nav-bar,
+    #taskScreen .page-nav-wrap .site-nav-bar,
+    #projectsScreen .page-nav-wrap .site-nav-bar,
+    #profileScreen .page-nav-wrap .site-nav-bar {
+      width: min(1120px, 100%);
+    }
+
+  
+
+    /* Final small layout update: narrower white boxes and search icon with filters */
+    #homeScreen .full-page-shell,
+    #taskScreen .full-page-shell,
+    #projectsScreen .full-page-shell,
+    #profileScreen .full-page-shell {
+      width: min(1100px, calc(100vw - 80px));
+    }
+    #homeScreen .content-surface,
+    #taskScreen .content-surface,
+    #projectsScreen .content-surface,
+    #profileScreen .content-surface,
+    #homeScreen .page-nav-wrap .site-nav-bar,
+    #taskScreen .page-nav-wrap .site-nav-bar,
+    #projectsScreen .page-nav-wrap .site-nav-bar,
+    #profileScreen .page-nav-wrap .site-nav-bar {
+      width: min(1040px, 100%);
+    }
+    .task-filter-row {
+      grid-template-columns: 1.4fr 0.75fr 0.75fr 0.75fr;
+      gap: 10px;
+      margin: 10px 0 16px;
+    }
+    .search-with-icon {
+      position: relative;
+      width: 100%;
+    }
+    .search-with-icon .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.95rem;
+      opacity: 0.65;
+      pointer-events: none;
+    }
+    .search-with-icon input {
+      padding-left: 42px !important;
+    }
+    .team-footer-inside { display: none !important; }
+    @media (max-width: 900px) {
+      #homeScreen .full-page-shell,
+      #taskScreen .full-page-shell,
+      #projectsScreen .full-page-shell,
+      #profileScreen .full-page-shell {
+        width: min(100vw - 20px, 1100px);
+      }
+      .task-filter-row { grid-template-columns: 1fr; }
+    }
+
   </style>
 </head>
 <body>
@@ -1095,6 +1388,19 @@
 
   <section class="app-screen hidden" id="projectsScreen">
     <div class="full-page-shell">
+      <div class="top-compact-row">
+        <div class="hub-chip compact">
+          <div class="mini-logo">H</div>
+          <div class="hub-copy">
+            <h3>H-HUB</h3>
+            <p>Student Task Hub Dashboard</p>
+          </div>
+        </div>
+        <div class="task-user-actions compact-actions">
+          <div class="signed-pill">Signed in as <span id="signedInUserLabelProjects">student@ufl.edu</span></div>
+          <button type="button" class="outline-btn task-top-btn" id="logoutBtnProjectsTop">Log Out</button>
+        </div>
+      </div>
       <div class="page-nav-wrap">
         <div class="site-nav-bar">
           <button type="button" class="nav-menu-btn site-nav-link" id="homeNavProjects">Home</button>
@@ -1113,6 +1419,28 @@
           <div class="task-count-badge"><span id="taskCountProjects">0</span> Total Tasks</div>
         </div>
 
+        <div class="task-filter-row">
+          <div class="search-with-icon">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input id="taskSearchInput" type="search" placeholder="Search tasks by title, creator, date, or description...">
+          </div>
+          <select id="taskCategoryFilter" aria-label="Filter by category">
+            <option value="">All Categories</option>
+            <option value="Academic">Academic</option>
+            <option value="Personal">Personal</option>
+          </select>
+          <select id="taskPriorityFilter" aria-label="Filter by priority">
+            <option value="">All Priorities</option>
+            <option value="High">High</option>
+            <option value="Low">Low</option>
+          </select>
+          <select id="taskStatusFilter" aria-label="Filter by claim status">
+            <option value="">All Status</option>
+            <option value="claimed">Claimed</option>
+            <option value="unclaimed">Unclaimed</option>
+          </select>
+        </div>
+
         <div class="table-scroll">
           <div id="emptyState" class="table-empty">No tasks yet. Create your first task and it will appear here.</div>
           <table class="tasks-table hidden" id="projectsTable">
@@ -1125,6 +1453,7 @@
                 <th>Due Date</th>
                 <th>Description</th>
                 <th>Action</th>
+                <th>Claim</th>
               </tr>
             </thead>
             <tbody id="projectsTableBody"></tbody>
@@ -1140,6 +1469,19 @@
 
   <section class="app-screen hidden" id="profileScreen">
     <div class="full-page-shell">
+      <div class="top-compact-row">
+        <div class="hub-chip compact">
+          <div class="mini-logo">H</div>
+          <div class="hub-copy">
+            <h3>H-HUB</h3>
+            <p>Student Task Hub Dashboard</p>
+          </div>
+        </div>
+        <div class="task-user-actions compact-actions">
+          <div class="signed-pill">Signed in as <span id="signedInUserLabelProfile">student@ufl.edu</span></div>
+          <button type="button" class="outline-btn task-top-btn" id="logoutBtnProfileTop">Log Out</button>
+        </div>
+      </div>
       <div class="page-nav-wrap">
         <div class="site-nav-bar">
           <button type="button" class="nav-menu-btn site-nav-link" id="homeNavProfile">Home</button>
@@ -1208,7 +1550,7 @@
         <p id="taskOwnerAbout">-</p>
       </div>
       <div class="modal-actions" style="justify-content:center; margin-top:24px;">
-        <button type="button" class="primary-btn" id="claimTaskBtn" style="width:100%; max-width:360px; font-size:1.05rem; padding:18px 22px;">Claim Task</button>
+        <button type="button" class="status-badge unclaimed" id="claimTaskBtn" style="width:100%; max-width:360px;">Status: Unclaimed</button>
       </div>
     </div>
   </div>
@@ -1266,6 +1608,10 @@
     const taskForm = document.getElementById('taskForm');
     const projectsTableBody = document.getElementById('projectsTableBody');
     const projectsTable = document.getElementById('projectsTable');
+    const taskSearchInput = document.getElementById('taskSearchInput');
+    const taskCategoryFilter = document.getElementById('taskCategoryFilter');
+    const taskPriorityFilter = document.getElementById('taskPriorityFilter');
+    const taskStatusFilter = document.getElementById('taskStatusFilter');
 
     const emptyState = document.getElementById('emptyState');
     const taskOwnerModal = document.getElementById('taskOwnerModal');
@@ -1586,24 +1932,38 @@
 
     function updateClaimButton(task) {
       if (!claimTaskBtn) return;
-      const currentUserEmail = (getUser().email || '').toLowerCase();
-      const claimedBy = (task.claimedBy || '').toLowerCase();
-      if (claimedBy && claimedBy === currentUserEmail) {
-        claimTaskBtn.textContent = 'Claimed by You';
-        claimTaskBtn.disabled = true;
-        claimTaskBtn.style.opacity = '0.75';
-        return;
-      }
-      if (claimedBy) {
-        claimTaskBtn.textContent = `Already Claimed`;
-        claimTaskBtn.disabled = true;
-        claimTaskBtn.style.opacity = '0.75';
-        return;
-      }
-      claimTaskBtn.textContent = 'Claim Task';
-      claimTaskBtn.disabled = false;
+      const claimedBy = task.claimedBy || '';
+      claimTaskBtn.disabled = true;
       claimTaskBtn.style.opacity = '1';
+      if (claimedBy) {
+        claimTaskBtn.textContent = `Status: Claimed`;
+        claimTaskBtn.className = 'status-badge claimed';
+        return;
+      }
+      claimTaskBtn.textContent = 'Status: Unclaimed';
+      claimTaskBtn.className = 'status-badge unclaimed';
     }
+
+    function getTaskStatusHtml(task) {
+      return task.claimedBy
+        ? '<span class="status-badge claimed">Claimed</span>'
+        : '<span class="status-badge unclaimed">Unclaimed</span>';
+    }
+
+    function claimTaskFromRow(index) {
+      const tasks = getTasks();
+      const task = tasks[index];
+      if (!task || task.claimedBy) return;
+      const currentUser = getUser();
+      task.claimedBy = currentUser.email || 'student@ufl.edu';
+      task.claimedByName = currentUser.name || getDisplayName(currentUser);
+      saveTasks(tasks);
+      renderProjects();
+      renderHomeTasks();
+      alert(`You claimed "${task.title}" successfully.`);
+    }
+
+    window.claimTaskFromRow = claimTaskFromRow;
 
     function toggleTaskOwnerModal(show) {
       if (!taskOwnerModal) return;
@@ -1650,16 +2010,45 @@
     function renderProjects() {
       const tasks = getTasks();
       const currentUser = (getUser().email || '').toLowerCase();
+      const searchTerm = (taskSearchInput?.value || '').trim().toLowerCase();
+      const categoryFilter = taskCategoryFilter?.value || '';
+      const priorityFilter = taskPriorityFilter?.value || '';
+      const statusFilter = taskStatusFilter?.value || '';
       projectsTableBody.innerHTML = '';
       updateCounters();
+
       if (!tasks.length) {
         projectsTable.classList.add('hidden');
         emptyState.classList.remove('hidden');
+        emptyState.textContent = 'No tasks yet. Create your first task and it will appear here.';
         return;
       }
+
+      const filteredTasks = tasks
+        .map((task, index) => ({ task, index }))
+        .filter(({ task }) => {
+          const taskStatus = task.claimedBy ? 'claimed' : 'unclaimed';
+          const matchesCategory = !categoryFilter || task.category === categoryFilter;
+          const matchesPriority = !priorityFilter || task.priority === priorityFilter;
+          const matchesStatus = !statusFilter || taskStatus === statusFilter;
+          const searchable = [
+            task.title, task.createdBy, task.category, task.priority,
+            formatDate(task.date), task.description, task.priorityDescription, taskStatus
+          ].join(' ').toLowerCase();
+          const matchesSearch = !searchTerm || searchable.includes(searchTerm);
+          return matchesSearch && matchesCategory && matchesPriority && matchesStatus;
+        });
+
+      if (!filteredTasks.length) {
+        projectsTable.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        emptyState.textContent = 'No matching tasks found. Try another search or filter.';
+        return;
+      }
+
       emptyState.classList.add('hidden');
       projectsTable.classList.remove('hidden');
-      tasks.forEach((task, index) => {
+      filteredTasks.forEach(({ task, index }) => {
         const owner = task.createdBy || 'student@ufl.edu';
         const isMine = owner.toLowerCase() === currentUser;
         const tr = document.createElement('tr');
@@ -1670,7 +2059,8 @@
           <td><span class="pill ${task.priority.toLowerCase() === 'medium' ? 'medium' : task.priority.toLowerCase()}">${escapeHtml(task.priority)}</span></td>
           <td>${escapeHtml(formatDate(task.date))}</td>
           <td>${escapeHtml(task.description)}${task.priorityDescription ? `<div class="priority-note-line"><strong>Urgent:</strong> ${escapeHtml(task.priorityDescription)}</div>` : ''}</td>
-          <td><button class="text-link" type="button" onclick="openTaskOwnerModal(${index})">View</button></td>
+          <td><button class="text-link" type="button" onclick="openTaskOwnerModal(${index})">Status</button></td>
+          <td><button class="claim-row-btn" type="button" onclick="claimTaskFromRow(${index})" ${task.claimedBy ? 'disabled' : ''}>${task.claimedBy ? 'Claimed' : 'Claim'}</button></td>
         `;
         projectsTableBody.appendChild(tr);
       });
@@ -1687,11 +2077,17 @@
     }
 
 
+    function getDisplayName(user) {
+      const email = user.email || 'student@ufl.edu';
+      return email.includes('@') ? email.split('@')[0] : email;
+    }
+
     function syncSignedInUser() {
       const user = getUser();
-      ['signedInUserLabel', 'signedInUserLabelHome'].forEach(id => {
+      const displayName = getDisplayName(user);
+      ['signedInUserLabel', 'signedInUserLabelHome', 'signedInUserLabelProjects', 'signedInUserLabelProfile'].forEach(id => {
         const label = document.getElementById(id);
-        if (label) label.textContent = user.email || 'student@ufl.edu';
+        if (label) label.textContent = displayName;
       });
     }
 
@@ -1765,18 +2161,7 @@
 
     if (claimTaskBtn) {
       claimTaskBtn.addEventListener('click', () => {
-        if (currentTaskModalIndex === null) return;
-        const tasks = getTasks();
-        const task = tasks[currentTaskModalIndex];
-        if (!task) return;
-        const currentUser = getUser();
-        task.claimedBy = currentUser.email || 'student@ufl.edu';
-        task.claimedByName = currentUser.name || 'Student User';
-        saveTasks(tasks);
-        updateClaimButton(task);
-        renderProjects();
-        renderHomeTasks();
-        alert(`You claimed "${task.title}" successfully.`);
+        // Claiming is now done only from the Claim column in the View Tasks table.
       });
     }
     if (closeTaskOwnerModalBtn) closeTaskOwnerModalBtn.addEventListener('click', () => toggleTaskOwnerModal(false));
@@ -2016,13 +2401,18 @@
       openProfile(profileScreen);
     });
 
-    ['logoutBtnHome','logoutBtn1','logoutBtn3'].forEach(id => {
+    ['logoutBtnHome','logoutBtn1','logoutBtn3','logoutBtnProjectsTop','logoutBtnProfileTop'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.addEventListener('click', () => showAuth('signin'));
     });
 
     fillProfile();
     syncSignedInUser();
+    if (taskSearchInput) taskSearchInput.addEventListener('input', renderProjects);
+    [taskCategoryFilter, taskPriorityFilter, taskStatusFilter].forEach(filter => {
+      if (filter) filter.addEventListener('change', renderProjects);
+    });
+
     renderProjects();
     renderHomeTasks();
     syncDateLimits();
