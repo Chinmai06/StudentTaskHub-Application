@@ -42,7 +42,6 @@ func createTables() {
 		username TEXT UNIQUE NOT NULL,
 		full_name TEXT DEFAULT '',
 		bio TEXT DEFAULT '',
-		major TEXT DEFAULT '',
 		year TEXT DEFAULT '',
 		skills TEXT DEFAULT '',
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
