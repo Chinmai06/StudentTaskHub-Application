@@ -9,7 +9,6 @@ import (
 
 var DB *sql.DB
 
-// InitDB creates the SQLite database and tables
 func InitDB(filepath string) {
 	var err error
 	DB, err = sql.Open("sqlite3", filepath)
@@ -80,6 +79,19 @@ func createTables() {
 		FOREIGN KEY (username) REFERENCES users(username)
 	);`
 
+	// Sprint 4: Notifications table
+	notificationsTable := `
+	CREATE TABLE IF NOT EXISTS notifications (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		username TEXT NOT NULL,
+		message TEXT NOT NULL,
+		task_id INTEGER NOT NULL,
+		is_read INTEGER DEFAULT 0,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		FOREIGN KEY (username) REFERENCES users(username),
+		FOREIGN KEY (task_id) REFERENCES tasks(id)
+	);`
+
 	tables := []struct {
 		name string
 		sql  string
@@ -88,6 +100,7 @@ func createTables() {
 		{"profiles", profilesTable},
 		{"tasks", tasksTable},
 		{"feedback", feedbackTable},
+		{"notifications", notificationsTable},
 	}
 
 	for _, table := range tables {
