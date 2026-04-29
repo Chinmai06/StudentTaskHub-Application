@@ -2,10 +2,27 @@
 
 ## Work Completed in Sprint 4
 
+### Backend - New Features
+- **In-App Notifications**: Users receive notifications when someone claims their task, updates task status, or leaves feedback
+- **Notification Management**: Users can view notifications, mark as read (single or all), and check unread count
+- **Privacy**: Only notification owner can view and manage their notifications
+- **Input Sanitization**: All user inputs are trimmed and length-limited to prevent abuse
+- **Better Validation**: Username must be 3+ characters, email must contain @, improved error messages
+- **Cascade Delete**: Deleting a task also removes associated notifications and feedback
+
+### Backend - New Unit Tests
+- 10 new tests for notification and validation functionality
+- Total: 55+ backend unit tests
+
+### Documentation
+- Updated README.md with full setup instructions
+- Sprint4.md with all tests and API documentation
+
+---
+
 ## User Stories
 
 ### From Sprint 1-3
-
 1. As a student, I want to create a task with a deadline and priority so that others understand its urgency.
 2. As a student, I want to view available (open) tasks so that I can find a task to work on.
 3. As a student, I want to claim an open task so that I can take responsibility for completing it.
@@ -21,44 +38,23 @@
 13. As a student, I want to see feedback on tasks.
 
 ### New for Sprint 4
-
-1. As a student, I want the UI to have clear fonts and proper styling so that I can easily read and navigate the application.
-2. As a student, I want to see “Status” instead of “View” so that I clearly understand the state of each task.
-3. As a student, I want to see whether a task is claimed or unclaimed so that I can decide if I can work on it.
-4. As a student, I want a well-structured task layout so that I can quickly understand task details and actions.
-5. As a student, I want to receive notifications when someone claims my task so I stay informed.
-6. As a student, I want to be notified when a task's status changes so I can track progress.
-7. As a student, I want to be notified when someone leaves feedback on my task.
-8. As a student, I want to mark notifications as read so I can manage my inbox.
-9. As a student, I want to see how many unread notifications I have.
-10. As a student, I want my notifications to be private so only I can see them.
-
-### Backend - New Features
-
-- **In-App Notifications**: Users receive notifications when someone claims their task, updates task status, or leaves feedback
-- **Notification Management**: Users can view notifications, mark as read (single or all), and check unread count
-- **Privacy**: Only notification owner can view and manage their notifications
-- **Input Sanitization**: All user inputs are trimmed and length-limited to prevent abuse
-- **Better Validation**: Username must be 3+ characters, email must contain @, improved error messages
-- **Cascade Delete**: Deleting a task also removes associated notifications and feedback
-
-### Backend - New Unit Tests
-
-- 10 new tests for notification and validation functionality
-- Total: 55+ backend unit tests
+14. As a student, I want to receive notifications when someone claims my task so I stay informed.
+15. As a student, I want to be notified when a task's status changes so I can track progress.
+16. As a student, I want to be notified when someone leaves feedback on my task.
+17. As a student, I want to mark notifications as read so I can manage my inbox.
+18. As a student, I want to see how many unread notifications I have.
+19. As a student, I want my notifications to be private so only I can see them.
 
 ---
 
-## Backend Unit Tests from sprint 1 to sprint 4
+## Backend Unit Tests
 
 Run with:
-
 ```bash
 go test ./handlers/ -v
 ```
 
 ### Register Tests
-
 | Test Name | Description |
 |-----------|-------------|
 | TestRegister_Success | Registers user, verifies 201 |
@@ -69,7 +65,6 @@ go test ./handlers/ -v
 | TestRegister_InvalidEmail | Email without @ returns 400 (Sprint 4) |
 
 ### Login Tests
-
 | Test Name | Description |
 |-----------|-------------|
 | TestLogin_Success | Correct credentials return 200 |
@@ -78,7 +73,6 @@ go test ./handlers/ -v
 | TestLogin_MissingFields | Missing data returns 400 |
 
 ### CreateTask Tests
-
 | Test Name | Description |
 |-----------|-------------|
 | TestCreateTask_Success | Creates task with all fields |
@@ -89,7 +83,6 @@ go test ./handlers/ -v
 | TestCreateTask_WithCategoryAndLocation | Verifies category and location stored |
 
 ### GetTasks Tests
-
 | Test Name | Description |
 |-----------|-------------|
 | TestGetTasks_Empty | Empty DB returns empty array |
@@ -103,35 +96,30 @@ go test ./handlers/ -v
 | TestGetTasks_SortByPriority | Sorts High > Medium > Low |
 
 ### GetTask Tests
-
 | Test Name | Description |
 |-----------|-------------|
 | TestGetTask_Success | Gets task by ID |
 | TestGetTask_NotFound | 404 for non-existent |
 
 ### UpdateTask Tests
-
 | Test Name | Description |
 |-----------|-------------|
 | TestUpdateTask_Success | Creator updates task |
 | TestUpdateTask_Forbidden | Non-creator gets 403 |
 
 ### DeleteTask Tests
-
 | Test Name | Description |
 |-----------|-------------|
 | TestDeleteTask_Success | Creator deletes task |
 | TestDeleteTask_Forbidden | Non-creator gets 403 |
 
 ### ClaimTask Tests
-
 | Test Name | Description |
 |-----------|-------------|
 | TestClaimTask_Success | Claims open task |
 | TestClaimTask_AlreadyClaimed | Already claimed returns 409 |
 
 ### UpdateTaskStatus Tests
-
 | Test Name | Description |
 |-----------|-------------|
 | TestUpdateTaskStatus_Success | Updates to in_progress |
@@ -140,7 +128,6 @@ go test ./handlers/ -v
 | TestMarkTaskAsCompleted | Marks task as done |
 
 ### Profile Tests
-
 | Test Name | Description |
 |-----------|-------------|
 | TestGetProfile_Success | Gets profile |
@@ -149,7 +136,6 @@ go test ./handlers/ -v
 | TestUpdateProfile_Forbidden | Can't edit other's profile |
 
 ### Feedback Tests
-
 | Test Name | Description |
 |-----------|-------------|
 | TestAddFeedback_Success | Adds 5-star feedback |
@@ -159,8 +145,7 @@ go test ./handlers/ -v
 | TestGetFeedback_Success | Gets feedback list |
 | TestGetFeedback_Empty | No feedback returns empty |
 
-### Notification Tests (Sprint 4)
-
+### Notification Tests (Sprint 4 - NEW)
 | Test Name | Description |
 |-----------|-------------|
 | TestGetNotifications_Empty | No notifications returns empty array |
@@ -189,7 +174,6 @@ go test ./handlers/ -v
 ## Backend API Documentation
 
 ### Base URL
-
 ```
 http://localhost:8080/api
 ```
@@ -197,11 +181,9 @@ http://localhost:8080/api
 ### Sprint 4 New Endpoints
 
 #### GET /api/notifications?username=xxx
-
 Get all notifications for a user (most recent first, max 50).
 
 **Success Response (200):**
-
 ```json
 [
     {
@@ -216,11 +198,9 @@ Get all notifications for a user (most recent first, max 50).
 ```
 
 #### GET /api/notifications/unread-count?username=xxx
-
 Get the count of unread notifications.
 
 **Success Response (200):**
-
 ```json
 {
     "unread_count": 3
@@ -228,11 +208,9 @@ Get the count of unread notifications.
 ```
 
 #### PATCH /api/notifications/{id}/read?username=xxx
-
 Mark a single notification as read. Only the notification owner can do this.
 
 **Success Response (200):**
-
 ```json
 {
     "message": "Notification marked as read"
@@ -242,11 +220,9 @@ Mark a single notification as read. Only the notification owner can do this.
 **Error:** 403 if trying to read another user's notification
 
 #### PATCH /api/notifications/read-all?username=xxx
-
 Mark all of a user's notifications as read.
 
 **Success Response (200):**
-
 ```json
 {
     "message": "All notifications marked as read"
@@ -262,7 +238,7 @@ Mark all of a user's notifications as read.
 | Status updated by creator | Task claimer | "Task '{title}' status changed to {status} by {creator}" |
 | Feedback left | The other party | "{username} left feedback on task '{title}'" |
 
-### updated API Endpoints with sprint informatiom
+### All Endpoints Summary
 
 | Method | Endpoint | Description | Sprint |
 |--------|----------|-------------|--------|
