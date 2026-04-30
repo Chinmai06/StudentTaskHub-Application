@@ -779,7 +779,6 @@ func TestUpdateTaskStatus_InvalidStatus(t *testing.T) {
 		t.Errorf("Expected status 400, got %d", rr.Code)
 	}
 }
-
 func TestUpdateTaskStatus_Forbidden(t *testing.T) {
 	setupTestDB(t)
 	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
