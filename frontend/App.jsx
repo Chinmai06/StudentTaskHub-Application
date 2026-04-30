@@ -13,6 +13,7 @@ export default function LoginPage() {
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState('');
 
+  
   const validate = () => {
     const newErrors = {};
 
