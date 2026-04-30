@@ -1050,3 +1050,262 @@ func TestGetFeedback_Empty(t *testing.T) {
 		t.Errorf("Expected 0 feedbacks, got %d", len(feedbacks))
 	}
 }
+
+// ============================================================
+// Sprint 4: Notification Tests
+// ============================================================
+
+func TestGetNotifications_Empty(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+
+	req := httptest.NewRequest("GET", "/api/notifications?username=chinmai", nil)
+	rr := httptest.NewRecorder()
+
+	GetNotifications(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", rr.Code)
+	}
+
+	var notifs []models.Notification
+	json.NewDecoder(rr.Body).Decode(&notifs)
+	if len(notifs) != 0 {
+		t.Errorf("Expected 0 notifications, got %d", len(notifs))
+	}
+}
+
+func TestGetNotifications_MissingUsername(t *testing.T) {
+	setupTestDB(t)
+
+	req := httptest.NewRequest("GET", "/api/notifications", nil)
+	rr := httptest.NewRecorder()
+
+	GetNotifications(rr, req)
+
+	if rr.Code != http.StatusBadRequest {
+		t.Errorf("Expected status 400, got %d", rr.Code)
+	}
+}
+
+func TestClaimTask_CreatesNotification(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
+	createTestTask(t, "Test Task", "Desc", "2026-03-01", "High", "chinmai")
+
+	// Claim task
+	body := `{"claimed_by":"alice"}`
+	claimReq := httptest.NewRequest("POST", "/api/tasks/1/claim", bytes.NewBufferString(body))
+	claimReq.Header.Set("Content-Type", "application/json")
+	claimReq = mux.SetURLVars(claimReq, map[string]string{"id": "1"})
+	claimRR := httptest.NewRecorder()
+	ClaimTask(claimRR, claimReq)
+
+	// Check chinmai got a notification
+	req := httptest.NewRequest("GET", "/api/notifications?username=chinmai", nil)
+	rr := httptest.NewRecorder()
+	GetNotifications(rr, req)
+
+	var notifs []models.Notification
+	json.NewDecoder(rr.Body).Decode(&notifs)
+	if len(notifs) != 1 {
+		t.Errorf("Expected 1 notification for chinmai, got %d", len(notifs))
+	}
+	if len(notifs) > 0 && notifs[0].IsRead {
+		t.Errorf("Expected notification to be unread")
+	}
+}
+
+func TestStatusUpdate_CreatesNotification(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
+	createTestTask(t, "Test Task", "Desc", "2026-03-01", "High", "chinmai")
+
+	// Claim
+	claimBody := `{"claimed_by":"alice"}`
+	claimReq := httptest.NewRequest("POST", "/api/tasks/1/claim", bytes.NewBufferString(claimBody))
+	claimReq.Header.Set("Content-Type", "application/json")
+	claimReq = mux.SetURLVars(claimReq, map[string]string{"id": "1"})
+	claimRR := httptest.NewRecorder()
+	ClaimTask(claimRR, claimReq)
+
+	// Update status as alice
+	statusBody := `{"status":"in_progress"}`
+	statusReq := httptest.NewRequest("PATCH", "/api/tasks/1/status?username=alice", bytes.NewBufferString(statusBody))
+	statusReq.Header.Set("Content-Type", "application/json")
+	statusReq = mux.SetURLVars(statusReq, map[string]string{"id": "1"})
+	statusRR := httptest.NewRecorder()
+	UpdateTaskStatus(statusRR, statusReq)
+
+	// Chinmai should have 2 notifications (claim + status change)
+	req := httptest.NewRequest("GET", "/api/notifications?username=chinmai", nil)
+	rr := httptest.NewRecorder()
+	GetNotifications(rr, req)
+
+	var notifs []models.Notification
+	json.NewDecoder(rr.Body).Decode(&notifs)
+	if len(notifs) != 2 {
+		t.Errorf("Expected 2 notifications for chinmai, got %d", len(notifs))
+	}
+}
+
+func TestMarkNotificationRead_Success(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
+	createTestTask(t, "Test Task", "Desc", "2026-03-01", "High", "chinmai")
+
+	// Claim to generate notification
+	claimBody := `{"claimed_by":"alice"}`
+	claimReq := httptest.NewRequest("POST", "/api/tasks/1/claim", bytes.NewBufferString(claimBody))
+	claimReq.Header.Set("Content-Type", "application/json")
+	claimReq = mux.SetURLVars(claimReq, map[string]string{"id": "1"})
+	claimRR := httptest.NewRecorder()
+	ClaimTask(claimRR, claimReq)
+
+	// Get notification ID
+	getReq := httptest.NewRequest("GET", "/api/notifications?username=chinmai", nil)
+	getRR := httptest.NewRecorder()
+	GetNotifications(getRR, getReq)
+	var notifs []models.Notification
+	json.NewDecoder(getRR.Body).Decode(&notifs)
+
+	if len(notifs) == 0 {
+		t.Fatal("Expected at least 1 notification")
+	}
+
+	// Mark as read
+	notifID := strconv.Itoa(notifs[0].ID)
+	markReq := httptest.NewRequest("PATCH", "/api/notifications/"+notifID+"/read?username=chinmai", nil)
+	markReq = mux.SetURLVars(markReq, map[string]string{"id": notifID})
+	markRR := httptest.NewRecorder()
+	MarkNotificationRead(markRR, markReq)
+
+	if markRR.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", markRR.Code)
+	}
+}
+
+func TestMarkNotificationRead_Forbidden(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
+	createTestTask(t, "Test Task", "Desc", "2026-03-01", "High", "chinmai")
+
+	// Claim to generate notification for chinmai
+	claimBody := `{"claimed_by":"alice"}`
+	claimReq := httptest.NewRequest("POST", "/api/tasks/1/claim", bytes.NewBufferString(claimBody))
+	claimReq.Header.Set("Content-Type", "application/json")
+	claimReq = mux.SetURLVars(claimReq, map[string]string{"id": "1"})
+	claimRR := httptest.NewRecorder()
+	ClaimTask(claimRR, claimReq)
+
+	// Get chinmai's notification
+	getReq := httptest.NewRequest("GET", "/api/notifications?username=chinmai", nil)
+	getRR := httptest.NewRecorder()
+	GetNotifications(getRR, getReq)
+	var notifs []models.Notification
+	json.NewDecoder(getRR.Body).Decode(&notifs)
+
+	if len(notifs) == 0 {
+		t.Fatal("Expected at least 1 notification")
+	}
+
+	// Alice tries to mark chinmai's notification as read - should fail
+	notifID := strconv.Itoa(notifs[0].ID)
+	markReq := httptest.NewRequest("PATCH", "/api/notifications/"+notifID+"/read?username=alice", nil)
+	markReq = mux.SetURLVars(markReq, map[string]string{"id": notifID})
+	markRR := httptest.NewRecorder()
+	MarkNotificationRead(markRR, markReq)
+
+	if markRR.Code != http.StatusForbidden {
+		t.Errorf("Expected status 403, got %d", markRR.Code)
+	}
+}
+
+func TestMarkAllNotificationsRead_Success(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
+	createTestTask(t, "Task 1", "Desc", "2026-03-01", "High", "chinmai")
+
+	// Claim to create notification
+	claimBody := `{"claimed_by":"alice"}`
+	claimReq := httptest.NewRequest("POST", "/api/tasks/1/claim", bytes.NewBufferString(claimBody))
+	claimReq.Header.Set("Content-Type", "application/json")
+	claimReq = mux.SetURLVars(claimReq, map[string]string{"id": "1"})
+	claimRR := httptest.NewRecorder()
+	ClaimTask(claimRR, claimReq)
+
+	// Mark all as read
+	req := httptest.NewRequest("PATCH", "/api/notifications/read-all?username=chinmai", nil)
+	rr := httptest.NewRecorder()
+	MarkAllNotificationsRead(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", rr.Code)
+	}
+}
+
+func TestGetUnreadCount(t *testing.T) {
+	setupTestDB(t)
+	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
+	createTestUser(t, "alice", "alice@ufl.edu", "pass123")
+	createTestTask(t, "Task 1", "Desc", "2026-03-01", "High", "chinmai")
+
+	// Claim to create notification
+	claimBody := `{"claimed_by":"alice"}`
+	claimReq := httptest.NewRequest("POST", "/api/tasks/1/claim", bytes.NewBufferString(claimBody))
+	claimReq.Header.Set("Content-Type", "application/json")
+	claimReq = mux.SetURLVars(claimReq, map[string]string{"id": "1"})
+	claimRR := httptest.NewRecorder()
+	ClaimTask(claimRR, claimReq)
+
+	req := httptest.NewRequest("GET", "/api/notifications/unread-count?username=chinmai", nil)
+	rr := httptest.NewRecorder()
+	GetUnreadCount(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", rr.Code)
+	}
+
+	var result map[string]int
+	json.NewDecoder(rr.Body).Decode(&result)
+	if result["unread_count"] != 1 {
+		t.Errorf("Expected unread_count 1, got %d", result["unread_count"])
+	}
+}
+
+// Sprint 4: Validation Tests
+
+func TestRegister_ShortUsername(t *testing.T) {
+	setupTestDB(t)
+
+	body := `{"username":"ab","email":"test@ufl.edu","password":"pass123"}`
+	req := httptest.NewRequest("POST", "/api/register", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	rr := httptest.NewRecorder()
+
+	Register(rr, req)
+
+	if rr.Code != http.StatusBadRequest {
+		t.Errorf("Expected status 400 for short username, got %d", rr.Code)
+	}
+}
+
+func TestRegister_InvalidEmail(t *testing.T) {
+	setupTestDB(t)
+
+	body := `{"username":"testuser","email":"notemail","password":"pass123"}`
+	req := httptest.NewRequest("POST", "/api/register", bytes.NewBufferString(body))
+	req.Header.Set("Content-Type", "application/json")
+	rr := httptest.NewRecorder()
+
+	Register(rr, req)
+
+	if rr.Code != http.StatusBadRequest {
+		t.Errorf("Expected status 400 for invalid email, got %d", rr.Code)
+	}
+}
