@@ -806,7 +806,6 @@ func TestUpdateTaskStatus_Forbidden(t *testing.T) {
 		t.Errorf("Expected status 403, got %d", rr.Code)
 	}
 }
-
 func TestMarkTaskAsCompleted(t *testing.T) {
 	setupTestDB(t)
 	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
