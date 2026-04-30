@@ -761,7 +761,6 @@ func TestUpdateTaskStatus_Success(t *testing.T) {
 		t.Errorf("Expected status 'in_progress', got '%s'", task.Status)
 	}
 }
-
 func TestUpdateTaskStatus_InvalidStatus(t *testing.T) {
 	setupTestDB(t)
 	createTestUser(t, "chinmai", "chinmai@ufl.edu", "pass123")
