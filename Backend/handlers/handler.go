@@ -58,7 +58,6 @@ func sanitize(input string, maxLen int) string {
 // User handlers
 // ============================================================
 
-// POST /api/register
 func Register(w http.ResponseWriter, r *http.Request) {
 	var req models.RegisterRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
