@@ -716,7 +716,6 @@ func MarkNotificationRead(w http.ResponseWriter, r *http.Request) {
 		sendError(w, http.StatusBadRequest, "Username query parameter is required")
 		return
 	}
-
 	// Sprint 4: Privacy - only the notification owner can mark it as read
 	var notifUsername string
 	err = database.DB.QueryRow("SELECT username FROM notifications WHERE id=?", id).Scan(&notifUsername)
