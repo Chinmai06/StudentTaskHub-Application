@@ -673,7 +673,6 @@ func GetFeedback(w http.ResponseWriter, r *http.Request) {
 // ============================================================
 // Notification handlers (Sprint 4 - NEW)
 // ============================================================
-
 // GET /api/notifications?username=xxx
 func GetNotifications(w http.ResponseWriter, r *http.Request) {
 	username := r.URL.Query().Get("username")
